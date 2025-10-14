@@ -9,17 +9,22 @@ plugins {
     id 'application'
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25) // or 17
+    }
+}
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    testImplementation(platform("org.junit:junit-bom:5.10.3"))
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testImplementation("org.junit.jupiter:junit-jupiter")
 
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
-
-    implementation libs.guava
+    implementation(libs.guava)
 }
 
 application {
