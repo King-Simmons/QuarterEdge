@@ -6,31 +6,54 @@
  * This project uses @Incubating APIs which are subject to change.
  */
 plugins {
-    id 'application'
+	id 'application'
+	id("com.diffplug.spotless") version "8.0.0"
+	id 'checkstyle'
 }
 
+spotless {
+
+	format 'misc', {
+		target '*.gradle', '.gitattributes', '.gitignore'
+
+		trimTrailingWhitespace()
+		leadingSpacesToTabs()
+		endWithNewline()
+	}
+	java {
+		googleJavaFormat('1.30.0').aosp().reflowLongStrings().skipJavadocFormatting()
+		formatAnnotations()
+
+	}
+}
+
+checkstyle {
+	toolVersion = "12.0.1"
+}
+
+
 java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(25) // or 17
-    }
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(25)
+	}
 }
 
 repositories {
-    mavenCentral()
+	mavenCentral()
 }
 
 dependencies {
-    testImplementation(platform("org.junit:junit-bom:5.10.3"))
+	testImplementation(platform("org.junit:junit-bom:5.10.3"))
 
-    testImplementation("org.junit.jupiter:junit-jupiter")
+	testImplementation("org.junit.jupiter:junit-jupiter")
 
-    implementation(libs.guava)
+	implementation(libs.guava)
 }
 
 application {
-    mainClass = 'com.quarteredge.QuarterEdgeApplication'
+	mainClass = 'com.quarteredge.QuarterEdgeApplication'
 }
 
 tasks.named('test') {
-    useJUnitPlatform()
+	useJUnitPlatform()
 }
