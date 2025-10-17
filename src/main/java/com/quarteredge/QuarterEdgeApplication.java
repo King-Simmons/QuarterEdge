@@ -17,5 +17,11 @@ public class QuarterEdgeApplication {
         System.out.println("Hello World");
         Parser parser = new Parser(new File("data/CL_5min_sample.csv"));
         parser.parse();
+        parser.getSessionMap()
+                .forEach(
+                        (key, value) -> {
+                            IO.println(key);
+                            value.forEach(IO::println);
+                        });
     }
 }
