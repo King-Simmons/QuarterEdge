@@ -71,6 +71,7 @@
     <module name="FileLength"/>
     <module name="LineLength">
         <property name="fileExtensions" value="java"/>
+        <property name="max" value="100"/>
     </module>
 
     <!-- Checks for whitespace                               -->
@@ -160,7 +161,10 @@
         <!-- See https://checkstyle.org/checks/coding/index.html -->
         <module name="EmptyStatement"/>
         <module name="EqualsHashCode"/>
-        <module name="HiddenField"/>
+        <module name="HiddenField">
+            <property name="ignoreConstructorParameter" value="true"/>
+            <property name="ignoreSetter" value="true"/>
+        </module>
         <module name="IllegalInstantiation"/>
         <module name="InnerAssignment"/>
         <module name="MagicNumber"/>
