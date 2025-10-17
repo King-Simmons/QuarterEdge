@@ -52,7 +52,6 @@ public class Parser {
      * be retrieved using {@link #getSessionMap()}.
      * </p>
      *
-     * @throws java.io.IOException if an I/O error occurs while reading the file
      * @throws IllegalStateException if the file has not been set or is invalid
      */
     public void parse() {
