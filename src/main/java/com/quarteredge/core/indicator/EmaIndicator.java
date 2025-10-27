@@ -1,14 +1,113 @@
 package com.quarteredge.core.indicator;
 
-public class EmaIndicator implements Indicator {
-    @Override
-    public void add() {}
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.List;
 
-    @Override
-    public double get() {
-        return 0;
+/**
+ * Exponential Moving Average (EMA) indicator implementation.
+ * <p>
+ * This indicator calculates a simple moving average over a specified period length.
+ * It maintains a rolling window of the most recent data points and computes their average.
+ * The indicator uses {@link BigDecimal} for precise financial calculations.
+ * </p>
+ *
+ * @author QuarterEdge
+ * @version 1.0
+ * @since 1.0
+ * @see Indicator
+ */
+public class EmaIndicator implements Indicator {
+    /**
+     * Queue that maintains the rolling window of price data points.
+     * The size of this queue is limited to the specified length.
+     */
+    private final Deque<BigDecimal> dataQueue;
+
+    /**
+     * The current calculated EMA value.
+     * Initialized to -1 to indicate insufficient data for calculation.
+     */
+    private BigDecimal val;
+
+    /**
+     * The period length (number of data points) used for the moving average calculation.
+     */
+    private final int length;
+
+    /**
+     * The running sum of all values currently in the data queue.
+     * Used to efficiently calculate the average without iterating through the queue.
+     */
+    private BigDecimal total;
+
+    /**
+     * The index position of the closing price in the price data list.
+     * Used to extract the closing price from the data array passed to {@link #add(List)}.
+     */
+    private static final int CLOSE_IDX = 4;
+
+    /**
+     * Constructs a new EMA indicator with the specified period length.
+     *
+     * @param length the number of periods to use for the moving average calculation
+     */
+    public EmaIndicator(final int length) {
+        this.dataQueue = new ArrayDeque<>();
+        this.val = new BigDecimal(-1);
+        this.length = length;
+        this.total = new BigDecimal(0);
     }
 
+    /**
+     * Adds new price data to the indicator and updates the EMA value.
+     * <p>
+     * Extracts the closing price from the data list (index 4) and recalculates
+     * the moving average.
+     * </p>
+     *
+     * @param data the list of string data containing price information,
+     *             where index 4 represents the closing price
+     */
     @Override
-    public void calculate() {}
+    public void add(final List<String> data) {
+        double close = Double.parseDouble(data.get(CLOSE_IDX));
+        calculate(close);
+    }
+
+    /**
+     * Returns the current calculated EMA value.
+     *
+     * @return the most recent EMA value, or -1 if insufficient data points are available
+     */
+    @Override
+    public BigDecimal get() {
+        if (length > dataQueue.size()) {
+            return new BigDecimal(-1);
+        }
+        return val;
+    }
+
+    /**
+     * Calculates the moving average based on the new input value.
+     * <p>
+     * Maintains a rolling window of data points. When the window is full,
+     * removes the oldest value before adding the new one. The average is
+     * calculated by dividing the total sum by the period length, rounded
+     * using {@link RoundingMode#HALF_UP}.
+     * </p>
+     *
+     * @param input the new price data point to add to the calculation
+     */
+    private void calculate(final double input) {
+        BigDecimal bd = new BigDecimal(input);
+        if (dataQueue.size() == length && length > 0) {
+            total = total.subtract(dataQueue.pollFirst());
+        }
+        total = total.add(bd);
+        dataQueue.add(bd);
+        val = total.divide(new BigDecimal(length), RoundingMode.HALF_UP);
+    }
 }
