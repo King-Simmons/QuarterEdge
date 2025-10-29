@@ -1,23 +1,30 @@
 package com.quarteredge.core.indicator;
 
+import com.quarteredge.core.model.Candle;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.List;
 
 /**
- * Exponential Moving Average (EMA) indicator implementation.
+ * Simple Moving Average (SMA) indicator implementation.
  * <p>
- * This indicator calculates a simple moving average over a specified period length.
- * It maintains a rolling window of the most recent data points and computes their average.
- * The indicator uses {@link BigDecimal} for precise financial calculations.
+ * This indicator calculates a simple moving average over a specified period length
+ * by maintaining a rolling window of the most recent closing prices and computing their average.
+ * The indicator uses {@link BigDecimal} for precise financial calculations and
+ * {@link RoundingMode#HALF_UP} for rounding.
+ * </p>
+ * <p>
+ * Note: Despite the class name, this is currently implementing an SMA (Simple Moving Average),
+ * not a true EMA (Exponential Moving Average). An EMA would apply exponential weighting
+ * to give more importance to recent prices.
  * </p>
  *
- * @author QuarterEdge
+ * @author King Simmons
  * @version 1.0
  * @since 1.0
  * @see Indicator
+ * @see Candle
  */
 public class EmaIndicator implements Indicator {
     /**
@@ -44,12 +51,6 @@ public class EmaIndicator implements Indicator {
     private BigDecimal total;
 
     /**
-     * The index position of the closing price in the price data list.
-     * Used to extract the closing price from the data array passed to {@link #add(List)}.
-     */
-    private static final int CLOSE_IDX = 4;
-
-    /**
      * Constructs a new EMA indicator with the specified period length.
      *
      * @param length the number of periods to use for the moving average calculation
@@ -62,25 +63,24 @@ public class EmaIndicator implements Indicator {
     }
 
     /**
-     * Adds new price data to the indicator and updates the EMA value.
+     * Adds new candlestick data to the indicator and updates the moving average value.
      * <p>
-     * Extracts the closing price from the data list (index 4) and recalculates
+     * Extracts the closing price from the {@link Candle} object and recalculates
      * the moving average.
      * </p>
      *
-     * @param data the list of string data containing price information,
-     *             where index 4 represents the closing price
+     * @param data the {@link Candle} object containing OHLCV price information
      */
     @Override
-    public void add(final List<String> data) {
-        double close = Double.parseDouble(data.get(CLOSE_IDX));
-        calculate(close);
+    public void add(final Candle data) {
+        calculate(data.close());
     }
 
     /**
-     * Returns the current calculated EMA value.
+     * Returns the current calculated moving average value.
      *
-     * @return the most recent EMA value, or -1 if insufficient data points are available
+     * @return the most recent moving average value as a {@link BigDecimal},
+     *         or -1 if insufficient data points are available (less than the specified period length)
      */
     @Override
     public BigDecimal get() {
