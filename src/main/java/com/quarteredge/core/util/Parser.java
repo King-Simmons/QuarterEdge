@@ -1,14 +1,13 @@
 package com.quarteredge.core.util;
 
+import com.quarteredge.core.model.Candle;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static com.quarteredge.core.util.Constants.*;
 
 /**
  * Parses CSV trading data files and organizes data into trading sessions.
@@ -31,7 +30,7 @@ public class Parser {
      * Value: List of records, where each record is a list of field values
      * </p>
      */
-    private final Map<String, List<List<String>>> sessionMap;
+    private final Map<String, List<Candle>> sessionMap;
 
     /**
      * Constructs a new Parser for the specified CSV file.
@@ -58,13 +57,24 @@ public class Parser {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(file));
             Iterator<String> iterator = reader.lines().iterator();
-            List<List<String>> currSession = new ArrayList<>();
+            List<Candle> currSession = new ArrayList<>();
 
             while (iterator.hasNext()) {
                 List<String> currLine = Arrays.asList(iterator.next().split("[, ]"));
-                currSession.add(currLine.subList(1, currLine.size()));
-                if (currLine.get(1).equals("16:55:00")) {
-                    sessionMap.put(currLine.getFirst(), new ArrayList<>(currSession));
+                // currSession.add(currLine.subList(1, currLine.size()));
+                Candle data =
+                        new Candle(
+                                currLine.get(DATE_INDEX),
+                                currLine.get(TIME_INDEX),
+                                Double.parseDouble(currLine.get(OPEN_INDEX)),
+                                Double.parseDouble(currLine.get(HIGH_INDEX)),
+                                Double.parseDouble(currLine.get(LOW_INDEX)),
+                                Double.parseDouble(currLine.get(CLOSE_INDEX)),
+                                Double.parseDouble(currLine.get(VOLUME_INDEX)));
+                currSession.add(data);
+
+                if (data.time().equals("16:55:00")) {
+                    sessionMap.put(data.date(), new ArrayList<>(currSession));
                     currSession.clear();
                 }
             }
@@ -83,7 +93,7 @@ public class Parser {
      * @return an immutable view of the session map containing parsed data,
      *         or an empty map if {@link #parse()} has not been called yet
      */
-    public Map<String, List<List<String>>> getSessionMap() {
+    public Map<String, List<Candle>> getSessionMap() {
         return sessionMap;
     }
 }
