@@ -30,7 +30,7 @@ import java.util.Map;
  * Expected CSV format: Date, Time, Open, High, Low, Close, Volume
  * </p>
  *
- * @author QuarterEdge
+ * @author King Simmons
  * @version 1.0
  * @since 1.0
  * @see Candle

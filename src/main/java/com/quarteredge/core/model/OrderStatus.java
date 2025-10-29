@@ -7,7 +7,7 @@ package com.quarteredge.core.model;
  * from initial creation to final closure.
  * </p>
  *
- * @author QuarterEdge
+ * @author King Simmons
  * @version 1.0
  * @since 1.0
  */
