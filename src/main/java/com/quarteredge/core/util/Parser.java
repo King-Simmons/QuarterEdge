@@ -1,14 +1,7 @@
 package com.quarteredge.core.util;
 
-import static com.quarteredge.core.util.Constants.CLOSE_INDEX;
-import static com.quarteredge.core.util.Constants.DATE_INDEX;
-import static com.quarteredge.core.util.Constants.HIGH_INDEX;
-import static com.quarteredge.core.util.Constants.LOW_INDEX;
-import static com.quarteredge.core.util.Constants.OPEN_INDEX;
-import static com.quarteredge.core.util.Constants.TIME_INDEX;
-import static com.quarteredge.core.util.Constants.VOLUME_INDEX;
-
 import com.quarteredge.core.model.Candle;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -18,6 +11,14 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.quarteredge.core.util.Constants.CLOSE_INDEX;
+import static com.quarteredge.core.util.Constants.DATE_INDEX;
+import static com.quarteredge.core.util.Constants.HIGH_INDEX;
+import static com.quarteredge.core.util.Constants.LOW_INDEX;
+import static com.quarteredge.core.util.Constants.OPEN_INDEX;
+import static com.quarteredge.core.util.Constants.TIME_INDEX;
+import static com.quarteredge.core.util.Constants.VOLUME_INDEX;
 
 /**
  * Parses CSV trading data files and organizes candlestick data into trading sessions.
@@ -30,7 +31,7 @@ import java.util.Map;
  * Expected CSV format: Date, Time, Open, High, Low, Close, Volume
  * </p>
  *
- * @author QuarterEdge
+ * @author King Simmons
  * @version 1.0
  * @since 1.0
  * @see Candle

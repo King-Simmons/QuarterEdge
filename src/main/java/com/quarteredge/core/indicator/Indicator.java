@@ -11,7 +11,7 @@ import java.math.BigDecimal;
  * update the indicator value, which can then be retrieved using {@link #get()}.
  * </p>
  *
- * @author QuarterEdge
+ * @author King Simmons
  * @version 1.0
  * @since 1.0
  * @see Candle
