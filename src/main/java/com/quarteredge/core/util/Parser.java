@@ -24,7 +24,7 @@ import java.util.Map;
  * <p>
  * This parser processes CSV files containing OHLCV (Open, High, Low, Close, Volume) market data
  * and groups the candles into sessions mapped by date. Each session represents a full trading day
- * and ends when a candle with time "16:55:00" is encountered.
+ * and ends when a candle with the time "16:55:00" is encountered.
  * </p>
  * <p>
  * Expected CSV format: Date, Time, Open, High, Low, Close, Volume
