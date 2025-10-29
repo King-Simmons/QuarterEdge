@@ -80,7 +80,8 @@ public class EmaIndicator implements Indicator {
      * Returns the current calculated moving average value.
      *
      * @return the most recent moving average value as a {@link BigDecimal},
-     *         or -1 if insufficient data points are available (less than the specified period length)
+     *         or -1 if insufficient data points are available
+     *         (less than the specified period length)
      */
     @Override
     public BigDecimal get() {
