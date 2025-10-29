@@ -5,17 +5,37 @@ import com.quarteredge.core.model.Candle;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
-import static com.quarteredge.core.util.Constants.*;
+import static com.quarteredge.core.util.Constants.CLOSE_INDEX;
+import static com.quarteredge.core.util.Constants.DATE_INDEX;
+import static com.quarteredge.core.util.Constants.HIGH_INDEX;
+import static com.quarteredge.core.util.Constants.LOW_INDEX;
+import static com.quarteredge.core.util.Constants.OPEN_INDEX;
+import static com.quarteredge.core.util.Constants.TIME_INDEX;
+import static com.quarteredge.core.util.Constants.VOLUME_INDEX;
 
 /**
- * Parses CSV trading data files and organizes data into trading sessions.
- * This parser processes CSV files containing market data (such as CL futures data)
- * and groups the records into sessions mapped by date. Each session contains
- * multiple records represented as lists of string values.
+ * Parses CSV trading data files and organizes candlestick data into trading sessions.
+ * <p>
+ * This parser processes CSV files containing OHLCV (Open, High, Low, Close, Volume) market data
+ * and groups the candles into sessions mapped by date. Each session represents a full trading day
+ * and ends when a candle with time "16:55:00" is encountered.
+ * </p>
+ * <p>
+ * Expected CSV format: Date, Time, Open, High, Low, Close, Volume
+ * </p>
  *
+ * @author QuarterEdge
+ * @version 1.0
  * @since 1.0
+ * @see Candle
+ * @see Constants
  */
 public class Parser {
     /**
@@ -24,10 +44,13 @@ public class Parser {
     private final File file;
 
     /**
-     * Map containing parsed data organized by trading session date.
+     * Map containing parsed candlestick data organized by trading session date.
      * <p>
-     * Key: Date string representing the trading session<br>
-     * Value: List of records, where each record is a list of field values
+     * Key: Date string representing the trading session (e.g., "2024-01-15")<br>
+     * Value: List of {@link Candle} objects for that trading session
+     * </p>
+     * <p>
+     * Uses {@link LinkedHashMap} to maintain insertion order of sessions.
      * </p>
      */
     private final Map<String, List<Candle>> sessionMap;
@@ -86,11 +109,12 @@ public class Parser {
     /**
      * Returns the map of parsed trading sessions.
      * <p>
-     * The map is organized with date strings as keys and lists of records
-     * as values. Each record is represented as a list of string fields.
+     * The map is organized with date strings as keys and lists of {@link Candle}
+     * objects as values. Each list represents a complete trading session for that date.
+     * The map maintains the insertion order (chronological order of sessions).
      * </p>
      *
-     * @return an immutable view of the session map containing parsed data,
+     * @return the session map containing parsed candlestick data grouped by date,
      *         or an empty map if {@link #parse()} has not been called yet
      */
     public Map<String, List<Candle>> getSessionMap() {
