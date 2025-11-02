@@ -1,6 +1,6 @@
 package com.quarteredge.core.model;
 
-public record Candle(
+public record CandleDTO(
         String date,
         String time,
         double open,

@@ -1,6 +1,6 @@
 package com.quarteredge.core.model;
 
-public record Order(
+public record OrderDTO(
         double SL,
         double TP,
         double entry,
