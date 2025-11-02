@@ -8,13 +8,12 @@ import static com.quarteredge.core.util.Constants.OPEN_INDEX;
 import static com.quarteredge.core.util.Constants.TIME_INDEX;
 import static com.quarteredge.core.util.Constants.VOLUME_INDEX;
 
-import com.quarteredge.core.model.Candle;
+import com.quarteredge.core.model.CandleDTO;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +32,7 @@ import java.util.Map;
  * @author King Simmons
  * @version 1.0
  * @since 1.0
- * @see Candle
+ * @see CandleDTO
  * @see Constants
  */
 public class Parser {
@@ -46,13 +45,13 @@ public class Parser {
      * Map containing parsed candlestick data organized by trading session date.
      * <p>
      * Key: Date string representing the trading session (e.g., "2024-01-15")<br>
-     * Value: List of {@link Candle} objects for that trading session
+     * Value: List of {@link CandleDTO} objects for that trading session
      * </p>
      * <p>
      * Uses {@link LinkedHashMap} to maintain insertion order of sessions.
      * </p>
      */
-    private final Map<String, List<Candle>> sessionMap;
+    private final Map<String, List<CandleDTO>> sessionMap;
 
     /**
      * Constructs a new Parser for the specified CSV file.
@@ -77,15 +76,14 @@ public class Parser {
      */
     public void parse() {
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            Iterator<String> iterator = reader.lines().iterator();
-            List<Candle> currSession = new ArrayList<>();
+            var reader = new BufferedReader(new FileReader(file));
+            var iterator = reader.lines().iterator();
+            var currSession = new ArrayList<CandleDTO>();
 
             while (iterator.hasNext()) {
-                List<String> currLine = Arrays.asList(iterator.next().split("[, ]"));
-                // currSession.add(currLine.subList(1, currLine.size()));
-                Candle data =
-                        new Candle(
+                var currLine = Arrays.asList(iterator.next().split("[, ]"));
+                var data =
+                        new CandleDTO(
                                 currLine.get(DATE_INDEX),
                                 currLine.get(TIME_INDEX),
                                 Double.parseDouble(currLine.get(OPEN_INDEX)),
@@ -108,7 +106,7 @@ public class Parser {
     /**
      * Returns the map of parsed trading sessions.
      * <p>
-     * The map is organized with date strings as keys and lists of {@link Candle}
+     * The map is organized with date strings as keys and lists of {@link CandleDTO}
      * objects as values. Each list represents a complete trading session for that date.
      * The map maintains the insertion order (chronological order of sessions).
      * </p>
@@ -116,7 +114,7 @@ public class Parser {
      * @return the session map containing parsed candlestick data grouped by date,
      *         or an empty map if {@link #parse()} has not been called yet
      */
-    public Map<String, List<Candle>> getSessionMap() {
+    public Map<String, List<CandleDTO>> getSessionMap() {
         return sessionMap;
     }
 }

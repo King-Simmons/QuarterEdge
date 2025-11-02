@@ -1,6 +1,6 @@
 package com.quarteredge.core.indicator;
 
-import com.quarteredge.core.model.Candle;
+import com.quarteredge.core.model.CandleDTO;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayDeque;
@@ -24,7 +24,7 @@ import java.util.Deque;
  * @version 1.0
  * @since 1.0
  * @see Indicator
- * @see Candle
+ * @see CandleDTO
  */
 public class EmaIndicator implements Indicator {
     /**
@@ -65,14 +65,14 @@ public class EmaIndicator implements Indicator {
     /**
      * Adds new candlestick data to the indicator and updates the moving average value.
      * <p>
-     * Extracts the closing price from the {@link Candle} object and recalculates
+     * Extracts the closing price from the {@link CandleDTO} object and recalculates
      * the moving average.
      * </p>
      *
-     * @param data the {@link Candle} object containing OHLCV price information
+     * @param data the {@link CandleDTO} object containing OHLCV price information
      */
     @Override
-    public void add(final Candle data) {
+    public void add(final CandleDTO data) {
         calculate(data.close());
     }
 
@@ -103,7 +103,7 @@ public class EmaIndicator implements Indicator {
      * @param input the new price data point to add to the calculation
      */
     private void calculate(final double input) {
-        BigDecimal bd = new BigDecimal(input);
+        var bd = new BigDecimal(input);
         if (dataQueue.size() == length && length > 0) {
             total = total.subtract(dataQueue.pollFirst());
         }
