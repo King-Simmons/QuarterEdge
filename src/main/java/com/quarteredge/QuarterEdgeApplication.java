@@ -21,7 +21,6 @@ public class QuarterEdgeApplication {
         Parser parser = new Parser(new File("data/CL_5min_sample.csv"));
         parser.parse();
         EmaIndicator emaIndicator = new EmaIndicator(EMA_PERIOD);
-        // DecimalFormat df = new DecimalFormat("#.##");
         parser.getSessionMap()
                 .forEach(
                         (key, value) -> {
