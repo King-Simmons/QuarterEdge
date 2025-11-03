@@ -20,14 +20,12 @@ import java.util.Map;
 
 /**
  * Parses CSV trading data files and organizes candlestick data into trading sessions.
- * <p>
- * This parser processes CSV files containing OHLCV (Open, High, Low, Close, Volume) market data
+ *
+ * <p>This parser processes CSV files containing OHLCV (Open, High, Low, Close, Volume) market data
  * and groups the candles into sessions mapped by date. Each session represents a full trading day
  * and ends when a candle with the time "16:55:00" is encountered.
- * </p>
- * <p>
- * Expected CSV format: Date, Time, Open, High, Low, Close, Volume
- * </p>
+ *
+ * <p>Expected CSV format: Date, Time, Open, High, Low, Close, Volume
  *
  * @author King Simmons
  * @version 1.0
@@ -36,20 +34,16 @@ import java.util.Map;
  * @see Constants
  */
 public class Parser {
-    /**
-     * The CSV file to be parsed.
-     */
+    /** The CSV file to be parsed. */
     private final File file;
 
     /**
      * Map containing parsed candlestick data organized by trading session date.
-     * <p>
-     * Key: Date string representing the trading session (e.g., "2024-01-15")<br>
+     *
+     * <p>Key: Date string representing the trading session (e.g., "2024-01-15")<br>
      * Value: List of {@link CandleDTO} objects for that trading session
-     * </p>
-     * <p>
-     * Uses {@link LinkedHashMap} to maintain insertion order of sessions.
-     * </p>
+     *
+     * <p>Uses {@link LinkedHashMap} to maintain insertion order of sessions.
      */
     private final Map<String, List<CandleDTO>> sessionMap;
 
@@ -66,11 +60,9 @@ public class Parser {
 
     /**
      * Parses the CSV file and populates the session map.
-     * <p>
-     * This method reads the CSV file line by line, processes each record,
-     * and organizes the data into trading sessions. The parsed data can
-     * be retrieved using {@link #getSessionMap()}.
-     * </p>
+     *
+     * <p>This method reads the CSV file line by line, processes each record, and organizes the data
+     * into trading sessions. The parsed data can be retrieved using {@link #getSessionMap()}.
      *
      * @throws IllegalStateException if the file has not been set or is invalid
      */
@@ -105,14 +97,13 @@ public class Parser {
 
     /**
      * Returns the map of parsed trading sessions.
-     * <p>
-     * The map is organized with date strings as keys and lists of {@link CandleDTO}
-     * objects as values. Each list represents a complete trading session for that date.
-     * The map maintains the insertion order (chronological order of sessions).
-     * </p>
      *
-     * @return the session map containing parsed candlestick data grouped by date,
-     *         or an empty map if {@link #parse()} has not been called yet
+     * <p>The map is organized with date strings as keys and lists of {@link CandleDTO} objects as
+     * values. Each list represents a complete trading session for that date. The map maintains the
+     * insertion order (chronological order of sessions).
+     *
+     * @return the session map containing parsed candlestick data grouped by date, or an empty map
+     *     if {@link #parse()} has not been called yet
      */
     public Map<String, List<CandleDTO>> getSessionMap() {
         return sessionMap;

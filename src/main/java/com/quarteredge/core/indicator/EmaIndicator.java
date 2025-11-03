@@ -8,17 +8,15 @@ import java.util.Deque;
 
 /**
  * Simple Moving Average (SMA) indicator implementation.
- * <p>
- * This indicator calculates a simple moving average over a specified period length
- * by maintaining a rolling window of the most recent closing prices and computing their average.
- * The indicator uses {@link BigDecimal} for precise financial calculations and
- * {@link RoundingMode#HALF_UP} for rounding.
- * </p>
- * <p>
- * Note: Despite the class name, this is currently implementing an SMA (Simple Moving Average),
- * not a true EMA (Exponential Moving Average). An EMA would apply exponential weighting
- * to give more importance to recent prices.
- * </p>
+ *
+ * <p>This indicator calculates a simple moving average over a specified period length by
+ * maintaining a rolling window of the most recent closing prices and computing their average. The
+ * indicator uses {@link BigDecimal} for precise financial calculations and {@link
+ * RoundingMode#HALF_UP} for rounding.
+ *
+ * <p>Note: Despite the class name, this is currently implementing an SMA (Simple Moving Average),
+ * not a true EMA (Exponential Moving Average). An EMA would apply exponential weighting to give
+ * more importance to recent prices.
  *
  * @author King Simmons
  * @version 1.0
@@ -28,25 +26,23 @@ import java.util.Deque;
  */
 public class EmaIndicator implements Indicator {
     /**
-     * Queue that maintains the rolling window of price data points.
-     * The size of this queue is limited to the specified length.
+     * Queue that maintains the rolling window of price data points. The size of this queue is
+     * limited to the specified length.
      */
     private final Deque<BigDecimal> dataQueue;
 
     /**
-     * The current calculated EMA value.
-     * Initialized to -1 to indicate insufficient data for calculation.
+     * The current calculated EMA value. Initialized to -1 to indicate insufficient data for
+     * calculation.
      */
     private BigDecimal val;
 
-    /**
-     * The period length (number of data points) used for the moving average calculation.
-     */
+    /** The period length (number of data points) used for the moving average calculation. */
     private final int length;
 
     /**
-     * The running sum of all values currently in the data queue.
-     * Used to efficiently calculate the average without iterating through the queue.
+     * The running sum of all values currently in the data queue. Used to efficiently calculate the
+     * average without iterating through the queue.
      */
     private BigDecimal total;
 
@@ -64,10 +60,9 @@ public class EmaIndicator implements Indicator {
 
     /**
      * Adds new candlestick data to the indicator and updates the moving average value.
-     * <p>
-     * Extracts the closing price from the {@link CandleDTO} object and recalculates
-     * the moving average.
-     * </p>
+     *
+     * <p>Extracts the closing price from the {@link CandleDTO} object and recalculates the moving
+     * average.
      *
      * @param data the {@link CandleDTO} object containing OHLCV price information
      */
@@ -79,9 +74,8 @@ public class EmaIndicator implements Indicator {
     /**
      * Returns the current calculated moving average value.
      *
-     * @return the most recent moving average value as a {@link BigDecimal},
-     *         or -1 if insufficient data points are available
-     *         (less than the specified period length)
+     * @return the most recent moving average value as a {@link BigDecimal}, or -1 if insufficient
+     *     data points are available (less than the specified period length)
      */
     @Override
     public BigDecimal get() {
@@ -93,12 +87,10 @@ public class EmaIndicator implements Indicator {
 
     /**
      * Calculates the moving average based on the new input value.
-     * <p>
-     * Maintains a rolling window of data points. When the window is full,
-     * removes the oldest value before adding the new one. The average is
-     * calculated by dividing the total sum by the period length, rounded
-     * using {@link RoundingMode#HALF_UP}.
-     * </p>
+     *
+     * <p>Maintains a rolling window of data points. When the window is full, removes the oldest
+     * value before adding the new one. The average is calculated by dividing the total sum by the
+     * period length, rounded using {@link RoundingMode#HALF_UP}.
      *
      * @param input the new price data point to add to the calculation
      */
@@ -109,6 +101,6 @@ public class EmaIndicator implements Indicator {
         }
         total = total.add(bd);
         dataQueue.add(bd);
-        val = total.divide(new BigDecimal(length), RoundingMode.HALF_UP);
+        val = total.divide(new BigDecimal(length), 2, RoundingMode.HALF_UP);
     }
 }

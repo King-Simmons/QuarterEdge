@@ -5,11 +5,10 @@ import java.math.BigDecimal;
 
 /**
  * Represents a technical indicator that processes candlestick data and provides calculated values.
- * <p>
- * This interface defines the contract for technical indicators used in trading strategies.
- * Implementations should call a private calculate method within the {@link #add(CandleDTO)}
- * method to update the indicator value, which can then be retrieved using {@link #get()}.
- * </p>
+ *
+ * <p>This interface defines the contract for technical indicators used in trading strategies.
+ * Implementations should call a private calculate method within the {@link #add(CandleDTO)} method
+ * to update the indicator value, which can then be retrieved using {@link #get()}.
  *
  * @author King Simmons
  * @version 1.0
@@ -19,10 +18,9 @@ import java.math.BigDecimal;
 public interface Indicator {
     /**
      * Adds new candlestick data to the indicator and updates its calculated value.
-     * <p>
-     * This method should internally call a private calculate() method to update
-     * the indicator value after processing the new candle data.
-     * </p>
+     *
+     * <p>This method should internally call a private calculate() method to update the indicator
+     * value after processing the new candle data.
      *
      * @param data the {@link CandleDTO} object containing OHLCV data to be added to the indicator
      */
@@ -31,8 +29,8 @@ public interface Indicator {
     /**
      * Returns the current calculated value of the indicator.
      *
-     * @return the most recent calculated indicator value as a {@link BigDecimal},
-     *         or -1 if insufficient data is available for calculation
+     * @return the most recent calculated indicator value as a {@link BigDecimal}, or -1 if
+     *     insufficient data is available for calculation
      */
     BigDecimal get();
 }
