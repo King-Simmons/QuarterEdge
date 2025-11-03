@@ -109,6 +109,6 @@ public class EmaIndicator implements Indicator {
         }
         total = total.add(bd);
         dataQueue.add(bd);
-        val = total.divide(new BigDecimal(length), RoundingMode.HALF_UP);
+        val = total.divide(new BigDecimal(length), 2, RoundingMode.HALF_UP);
     }
 }

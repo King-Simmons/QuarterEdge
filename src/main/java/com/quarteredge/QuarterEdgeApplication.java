@@ -3,7 +3,6 @@ package com.quarteredge;
 import com.quarteredge.core.indicator.EmaIndicator;
 import com.quarteredge.core.util.Parser;
 import java.io.File;
-import java.text.DecimalFormat;
 
 /**
  * Main application class for QuarterEdge.
@@ -26,7 +25,7 @@ public class QuarterEdgeApplication {
         Parser parser = new Parser(new File("data/CL_5min_sample.csv"));
         parser.parse();
         EmaIndicator emaIndicator = new EmaIndicator(EMA_PERIOD);
-        DecimalFormat df = new DecimalFormat("#.##");
+        // DecimalFormat df = new DecimalFormat("#.##");
         parser.getSessionMap()
                 .forEach(
                         (key, value) -> {
@@ -35,7 +34,7 @@ public class QuarterEdgeApplication {
                                     a -> {
                                         IO.println(a);
                                         emaIndicator.add(a);
-                                        IO.println(df.format(emaIndicator.get()));
+                                        IO.println(emaIndicator.get());
                                     });
                         });
     }
