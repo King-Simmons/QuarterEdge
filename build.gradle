@@ -21,7 +21,7 @@ spotless {
 		endWithNewline()
 	}
 	java {
-		googleJavaFormat('1.30.0').aosp().reflowLongStrings(false).skipJavadocFormatting()
+		googleJavaFormat('1.30.0').aosp().reflowLongStrings(true)
 		formatAnnotations()
 		forbidWildcardImports()
 
