@@ -18,9 +18,9 @@ public class QuarterEdgeApplication {
     /** Application entry point. Prints "Hello World" to the standard output stream. */
     static void main() {
         System.out.println("Hello World");
-        Parser parser = new Parser(new File("data/CL_5min_sample.csv"));
+        var parser = new Parser(new File("data/CL_5min_sample.csv"));
         parser.parse();
-        EmaIndicator emaIndicator = new EmaIndicator(EMA_PERIOD);
+        var emaIndicator = new EmaIndicator(EMA_PERIOD);
         parser.getSessionMap()
                 .forEach(
                         (key, value) -> {
