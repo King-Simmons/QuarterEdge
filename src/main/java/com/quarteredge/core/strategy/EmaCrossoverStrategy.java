@@ -74,8 +74,10 @@ public class EmaCrossoverStrategy implements Strategy {
      */
     @Override
     public void push(final CandleDTO data) {
+        isBullish = fastEma.get().doubleValue() > slowEma.get().doubleValue();
         fastEma.add(data);
         slowEma.add(data);
+
         this.currentCandle = data;
     }
 
@@ -124,11 +126,14 @@ public class EmaCrossoverStrategy implements Strategy {
      * @return the created order
      */
     private OrderDTO createOrder(final double entryPrice) {
-        final double stopLossValue = 10;
-        final double takeProfitValue = 25;
         Direction direction;
         double takeProfit;
         double stopLoss;
+        final double stopLossValue = 10;
+        final double takeProfitValue = 25;
+        String closeTime = "";
+        double closePrice = -1;
+
         if (isBullish) {
             direction = Direction.BUY;
             takeProfit = entryPrice + (takeProfitValue * increment);
@@ -138,9 +143,6 @@ public class EmaCrossoverStrategy implements Strategy {
             takeProfit = entryPrice - (takeProfitValue * increment);
             stopLoss = entryPrice + (stopLossValue * increment);
         }
-
-        String closeTime = "";
-        double closePrice = -1;
 
         return new OrderDTO(
                 stopLoss,

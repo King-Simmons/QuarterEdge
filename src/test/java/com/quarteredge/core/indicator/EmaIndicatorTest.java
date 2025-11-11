@@ -1,5 +1,6 @@
 package com.quarteredge.core.indicator;
 
+import static com.quarteredge.util.CommonUtils.createDefaultCandleWithClose;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.quarteredge.core.model.CandleDTO;
@@ -78,16 +79,5 @@ public class EmaIndicatorTest {
         ema.add(createDefaultCandleWithClose(2));
 
         assertEquals(0, new BigDecimal("2").compareTo(ema.get()));
-    }
-
-    /**
-     * Creates a {@link CandleDTO} with the provided close price and placeholder values for other
-     * fields to facilitate testing.
-     *
-     * @param close the close price to embed in the test candle
-     * @return a {@link CandleDTO} instance with the specified close
-     */
-    private CandleDTO createDefaultCandleWithClose(final double close) {
-        return new CandleDTO("", "", 2, 2, 2, close, 2);
     }
 }
