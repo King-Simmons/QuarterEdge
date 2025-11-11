@@ -2,6 +2,7 @@ package com.quarteredge.core.strategy;
 
 import com.quarteredge.core.indicator.EmaIndicator;
 import com.quarteredge.core.model.CandleDTO;
+import com.quarteredge.core.model.Direction;
 import com.quarteredge.core.model.OrderDTO;
 import com.quarteredge.core.model.OrderStatus;
 import java.util.Optional;
@@ -125,14 +126,28 @@ public class EmaCrossoverStrategy implements Strategy {
     private OrderDTO createOrder(final double entryPrice) {
         final double stopLossValue = 10;
         final double takeProfitValue = 25;
-        double takeProfit = entryPrice + (takeProfitValue * increment);
-        double stopLoss = entryPrice - (stopLossValue * increment);
+        Direction direction;
+        double takeProfit;
+        double stopLoss;
+        if (isBullish) {
+            direction = Direction.BUY;
+            takeProfit = entryPrice + (takeProfitValue * increment);
+            stopLoss = entryPrice - (stopLossValue * increment);
+        } else {
+            direction = Direction.SELL;
+            takeProfit = entryPrice - (takeProfitValue * increment);
+            stopLoss = entryPrice + (stopLossValue * increment);
+        }
+
         String closeTime = "";
+        double closePrice = -1;
 
         return new OrderDTO(
                 stopLoss,
                 takeProfit,
                 entryPrice,
+                closePrice,
+                direction,
                 currentCandle.time(),
                 closeTime,
                 OrderStatus.ACTIVE);
