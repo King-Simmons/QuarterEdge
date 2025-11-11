@@ -3,7 +3,6 @@ package com.quarteredge.core.indicator;
 import static com.quarteredge.util.CommonUtils.createDefaultCandleWithClose;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.quarteredge.core.model.CandleDTO;
 import java.math.BigDecimal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,7 +21,6 @@ import org.junit.jupiter.api.Test;
  * </ul>
  *
  * @see EmaIndicator
- * @see CandleDTO
  */
 public class EmaIndicatorTest {
     /** The {@link EmaIndicator} instance under test, configured with a period length of 3. */
