@@ -53,7 +53,7 @@
     <!-- https://checkstyle.org/filters/suppressionfilter.html -->
     <module name="SuppressionFilter">
         <property name="file"
-                  value="${org.checkstyle.sun.suppressionfilter.config}"
+                  value="${config_loc}/checkstyle-suppressions.xml"
                   default="checkstyle-suppressions.xml" />
         <property name="optional" value="true"/>
     </module>
@@ -186,6 +186,12 @@
         <module name="FinalParameters"/>
         <module name="TodoComment"/>
         <module name="UpperEll"/>
+        <module name="ImportOrder">
+            <property name="option" value="top"/>
+            <property name="separated" value="true"/>
+            <property name="staticGroups" value="true"/>
+            <property name="ordered" value="true"/>
+        </module>
 
         <!-- https://checkstyle.org/filters/suppressionxpathfilter.html -->
         <module name="SuppressionXpathFilter">
