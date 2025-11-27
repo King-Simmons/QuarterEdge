@@ -65,6 +65,8 @@ public class BackTestSession {
                 strategy.push(candle);
                 Optional<OrderDTO> order = strategy.getStatus();
                 order.ifPresent(orders::add);
+                //log new order
+                order.ifPresent(IO::println);
                 updateOrders(candle);
             }
         } catch (Exception e) {
@@ -116,7 +118,8 @@ public class BackTestSession {
                                 order.startTime(),
                                 candle.time(),
                                 closeStatus);
-                // update order
+                // update order and log
+                System.out.println(order);
                 orders.set(i, order);
             }
         }

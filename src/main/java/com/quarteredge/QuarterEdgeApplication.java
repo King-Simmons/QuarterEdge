@@ -17,7 +17,7 @@ public class QuarterEdgeApplication {
     private static final int SLOW_EMA_PERIOD = 20;
 
     /** Represents the increment value for the Exponential Moving Average (EMA) calculation. */
-    private static final double INCREMENT = 0.1;
+    private static final double INCREMENT = 0.01;
 
     /** Application entry point. Prints "Hello World" to the standard output stream. */
     static void main() {
