@@ -1,6 +1,7 @@
 package com.quarteredge;
 
-import com.quarteredge.core.indicator.EmaIndicator;
+import com.quarteredge.core.model.BackTestSession;
+import com.quarteredge.core.strategy.EmaCrossoverStrategy;
 import com.quarteredge.core.util.Parser;
 import java.io.File;
 
@@ -9,28 +10,30 @@ import java.io.File;
  * application.
  */
 public class QuarterEdgeApplication {
-    /**
-     * The default period length for the Exponential Moving Average calculation. A 20-period EMA is
-     * commonly used in technical analysis for short to medium-term trend identification.
-     */
-    private static final int EMA_PERIOD = 20;
+    /** Represents the period length for the fast Exponential Moving Average (EMA) calculation. */
+    private static final int FAST_EMA_PERIOD = 5;
+
+    /** Represents the period length for the slow Exponential Moving Average (EMA) calculation. */
+    private static final int SLOW_EMA_PERIOD = 20;
+
+    /** Represents the increment value for the Exponential Moving Average (EMA) calculation. */
+    private static final double INCREMENT = 0.1;
 
     /** Application entry point. Prints "Hello World" to the standard output stream. */
     static void main() {
         System.out.println("Hello World");
         var parser = new Parser(new File("data/CL_5min_sample.csv"));
         parser.parse();
-        var emaIndicator = new EmaIndicator(EMA_PERIOD);
+        var strategy = new EmaCrossoverStrategy(FAST_EMA_PERIOD, SLOW_EMA_PERIOD, INCREMENT);
         parser.getSessionMap()
                 .forEach(
                         (key, value) -> {
                             IO.println(key);
-                            value.forEach(
-                                    a -> {
-                                        IO.println(a);
-                                        emaIndicator.add(a);
-                                        IO.println(emaIndicator.get());
-                                    });
+                            var backTestSession = new BackTestSession(strategy, value);
+                            IO.println(backTestSession.getStatus());
+                            backTestSession.startSession();
+                            IO.println(backTestSession.getStatus());
+                            backTestSession.getOrders().forEach(IO::println);
                         });
     }
 }

@@ -105,20 +105,44 @@ public class BackTestSession {
             // check if order can be closed
             if (canBeClosed(order, candle)) {
                 OrderStatus closeStatus = determineCloseStatus(order, candle);
+                double closePrice = getClosePrice(candle, closeStatus, order);
                 order =
                         new OrderDTO(
                                 order.SL(),
                                 order.TP(),
                                 order.entry(),
-                                order.closePrice(),
+                                closePrice,
                                 order.direction(),
+                                order.startTime(),
                                 candle.time(),
-                                order.closeTime(),
                                 closeStatus);
                 // update order
                 orders.set(i, order);
             }
         }
+    }
+
+    /**
+     * Retrieves the close price of an order based on the current candlestick data.
+     *
+     * @param candle the current candlestick data point
+     * @param closeStatus the close status of the order
+     * @param order the order to retrieve the close price for
+     * @return the close price of the order
+     */
+    private static double getClosePrice(
+            final CandleDTO candle, final OrderStatus closeStatus, final OrderDTO order) {
+        double closePrice = -1;
+        if (closeStatus == OrderStatus.CLOSED_TP_HIT) {
+            closePrice = order.TP();
+        } else if (closeStatus == OrderStatus.CLOSED_SL_HIT) {
+            closePrice = order.SL();
+        } else if (closeStatus == OrderStatus.CLOSED_MANUAL) {
+            closePrice = candle.close();
+        } else if (closeStatus == OrderStatus.CLOSED_CANCELED) {
+            closePrice = candle.close();
+        }
+        return closePrice;
     }
 
     /**
