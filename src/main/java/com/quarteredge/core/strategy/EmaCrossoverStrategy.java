@@ -130,7 +130,7 @@ public class EmaCrossoverStrategy implements Strategy {
         double takeProfit;
         double stopLoss;
         final double stopLossValue = 10;
-        final double takeProfitValue = 25;
+        final double takeProfitValue = 15;
         String closeTime = "";
         double closePrice = -1;
 
