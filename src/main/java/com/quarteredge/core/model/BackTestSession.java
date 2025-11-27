@@ -1,5 +1,6 @@
 package com.quarteredge.core.model;
 
+import static com.quarteredge.core.util.Constants.FIRST_CANDLE_OPEN_TIME;
 import static com.quarteredge.core.util.Constants.LAST_CANDLE_CLOSE_TIME;
 
 import com.quarteredge.core.strategy.Strategy;
@@ -63,9 +64,13 @@ public class BackTestSession {
         try {
             for (CandleDTO candle : data) {
                 strategy.push(candle);
+                // if the first candle of trading day, skip
+                if (candle.time().equals(FIRST_CANDLE_OPEN_TIME)) {
+                    continue;
+                }
                 Optional<OrderDTO> order = strategy.getStatus();
                 order.ifPresent(orders::add);
-                //log new order
+                // log new order
                 order.ifPresent(IO::println);
                 updateOrders(candle);
             }
@@ -175,7 +180,10 @@ public class BackTestSession {
      * @return true if the order can be opened, false otherwise
      */
     private boolean canBeOpened(final OrderDTO order, final CandleDTO candle) {
-        if (order.status() != OrderStatus.PENDING) {
+        IO.println(candle.time());
+        if (order.status() != OrderStatus.PENDING
+                || candle.time().equals(LAST_CANDLE_CLOSE_TIME)
+                || candle.time().equals(FIRST_CANDLE_OPEN_TIME)) {
             return false;
         }
         // Determine if the entry price is hit
