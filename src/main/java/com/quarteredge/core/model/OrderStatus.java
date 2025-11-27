@@ -19,8 +19,24 @@ public enum OrderStatus {
     /** Indicates that the order is currently active in the market. */
     ACTIVE,
     /**
-     * Indicates that the order has been closed. The order has reached its target, hit stop loss or
-     * expired.
+     * Indicates that the order has been closed due to the take-profit price being hit.
      */
-    CLOSED
+    CLOSED_TP_HIT,
+    /**
+     * Indicates that the order has been closed due to the stop-loss price being hit.
+     */
+    CLOSED_SL_HIT,
+    /**
+     * Indicates that the order has been closed manually. Either by the user or the system.
+     */
+    CLOSED_MANUAL,
+    /**
+     * Indicates that the order has been canceled. I.e., price-limit is never triggered by
+     * the end of the trading session.
+     */
+    CLOSED_CANCELED,
+    /**
+     * Indicates that the order status is unknown and cannot be determined.
+     */
+    CLOSED_UNKNOWN
 }

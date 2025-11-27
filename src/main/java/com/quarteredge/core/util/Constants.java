@@ -35,4 +35,7 @@ public final class Constants {
 
     /** Index position for the volume field in CSV data records. */
     public static final int VOLUME_INDEX = 6;
+
+    /** The closing time of the last candle in a trading session (DAY). */
+    public static final String LAST_CANDLE_CLOSE_TIME = "16:55:00";
 }
