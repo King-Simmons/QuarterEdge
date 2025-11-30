@@ -86,6 +86,7 @@ Running Tests
 - 15-minute ATR
 - IDR/DR Ranges
 - Quarter Theory Entries
+- IDR + QT Breakout Strategy Implementation
 - Performance Engine
 
 ### v0.3.0 — ML Trade/Skip Classifier

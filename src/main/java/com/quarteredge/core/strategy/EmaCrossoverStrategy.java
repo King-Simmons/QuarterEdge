@@ -8,11 +8,11 @@ import com.quarteredge.core.model.OrderStatus;
 import java.util.Optional;
 
 /**
- * EMA Crossover Strategy implementation.
+ * EMA Crossover Strategy implementation. (Example)
  *
- * <p>This strategy uses two Exponential Moving Averages (EMAs) to determine when to enter and exit
- * trades. It is based on the crossover of the fast EMA over the slow EMA, indicating a potential
- * trend change.
+ * <p>This sample strategy uses two Exponential Moving Averages (EMAs) to determine when to enter
+ * and exit trades. It is based on the crossover of the fast EMA over the slow EMA, indicating a
+ * potential trend change.
  *
  * @author King Simmons
  * @version 1.0
