@@ -2,53 +2,6 @@
 
 QuarterEdge is a high-performance intraday research engine that models structured price behavior in Crude Oil (CL) futures. Using DR/IDR breakout logic, Quarter-Theory precision, and ML filters, it identifies high-probability intraday setups in CL futures with lightning-fast backtesting, performance dashboards, and live trading integration. Built in Java for speed, reproducibility, and production-grade engineering.
 
-# Features
-## Completed (MVP v0.1)
-
-- 1-minute CL data ingestion (5+ years of historical test data) ✅
-- Backtesting Engine ✅
-- Gradle build with: 
-
-    - modern toolchain ✅
-
-    - JUnit 5 (Jupiter) tests ✅
-
-    - CI pipeline (GitHub Actions) ✅
-
-    - Checkstyle config ✅
-
-## In Progress (v0.2)
-- DR/IDR session detection
-
-- Quarter-grid level mapping
-
-- Break → Retest → Confirm logic
-
-- Performance tracking engine with:
-
-    - win rate
-
-    - expectancy
-
-    - R-multiple distribution
-
-    - max drawdown
-
-## Planned (v0.3+)
-
-
-- 15-minute ATR regime analysis
-
-- Volatility-aware breakout filter
-
-- Data abstraction layer for multiple instruments
-
-- Probability-weighted target sizing
-
-- React dashboard for visualization
-
-- Live-trading bridge (websocket + REST wrapper)
-
 ## Architecture Overview
 ````
 QuarterEdge
@@ -69,7 +22,8 @@ QuarterEdge
 ├── ML layer (planned)
 │     └── trade/skip probability & confidence scoring
 │
-└── results + reporting
+├── results + reporting
+│ 
 ├── summary metrics
 ├── CSV output
 └── future charts/dashboard
@@ -123,36 +77,65 @@ Running Tests
 ### v0.1.0 — Backtest MVP (🚀 current)
 
 - Backtesting Engine
-
 - Basic EMA Crossover Strategy Implementation
-
 - CSV Data Ingestion
 
 
-### v0.2.0 — Volatility Regime + Filters
+### v0.2.0 — Basic Breakout Strategy + Trading Filters
 
 - 15-minute ATR
-
-- Range-to-volatility ratio
-
-- Pre-breakout context checks
+- IDR/DR Ranges
+- Quarter Theory Entries
+- Performance Engine
 
 ### v0.3.0 — ML Trade/Skip Classifier
 
-Feature engineering
-
-Model integration in Java
-
-Confidence scoring
+- Machine Learning Filters
+- AI Integration
+- Confidence scoring
 
 ### v0.4.0 — Visualization Layer
 
-Streamlit or React dashboard
-
-charts + analytics
+- React dashboard
+- Charts + analytics
+- Simulations + Projections
 
 ### v0.5.0 — Live-Trading Bridge
 
-REST + WebSocket adapter
+- REST + WebSocket adapter
+- Tradovate Integration
 
-Simulation of slippage & market hours
+## Motivation
+
+Intraday futures behavior (especially CL) exhibits repeatable structural patterns during the trading day:
+
+- Liquidity cycles around 8:30 CT & 9:00 CT
+
+- Pre-market compression
+
+- Range boundaries (DR/IDR)
+
+- Quarter-level magnets and rejection zones
+
+- Volatility-driven breakout success/failure rates
+
+QuarterEdge aims to formalize, measure, and model these behaviors with engineering discipline.
+
+## Disclaimer
+
+This project is for research and educational purposes only.
+Nothing here constitutes financial advice.
+Trading futures involves the significant risk of loss.
+
+## Author
+King Simmons
+
+Software Engineer
+
+www.linkedin.com/in/kingsimmons
+
+## ⭐ Support the Project
+
+If you like the work, star ⭐ the repo — it helps visibility and motivates development.
+
+
