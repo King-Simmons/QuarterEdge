@@ -1,6 +1,8 @@
 package com.quarteredge.util;
 
 import com.quarteredge.core.model.CandleDTO;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CommonUtils {
     /**
@@ -12,5 +14,13 @@ public class CommonUtils {
      */
     public static CandleDTO createDefaultCandleWithClose(final double close) {
         return new CandleDTO("", "", 2, 2, 2, close, 2);
+    }
+
+    public static List<CandleDTO> createDefaultCandleList() {
+        List<CandleDTO> defaultList = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            defaultList.add(createDefaultCandleWithClose(i));
+        }
+        return defaultList;
     }
 }
