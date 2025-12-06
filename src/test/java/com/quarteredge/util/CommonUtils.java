@@ -13,7 +13,7 @@ public class CommonUtils {
      * @return a {@link CandleDTO} instance with the specified close
      */
     public static CandleDTO createDefaultCandleWithClose(final double close) {
-        return new CandleDTO("", "", 2, 2, 2, close, 2);
+        return new CandleDTO("", "09:30:00", 2, 2, 2, close, 2);
     }
 
     public static List<CandleDTO> createDefaultCandleList() {
