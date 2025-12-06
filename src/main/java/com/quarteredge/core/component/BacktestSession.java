@@ -1,15 +1,19 @@
-package com.quarteredge.core.model;
+package com.quarteredge.core.component;
 
 import static com.quarteredge.core.util.Constants.FIRST_CANDLE_OPEN_TIME;
 import static com.quarteredge.core.util.Constants.LAST_CANDLE_CLOSE_TIME;
 
+import com.quarteredge.core.model.CandleDTO;
+import com.quarteredge.core.model.OrderDTO;
+import com.quarteredge.core.model.OrderStatus;
+import com.quarteredge.core.model.SessionStatus;
 import com.quarteredge.core.strategy.Strategy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 /**
- * BackTestSession class.
+ * BacktestSession class.
  *
  * <p>This class represents a backtesting session for evaluating the performance of a trading
  * strategy. It processes a sequence of candlestick data points and generates a list of orders based
@@ -23,7 +27,7 @@ import java.util.Optional;
  * @see Strategy
  * @see SessionStatus
  */
-public class BackTestSession {
+public class BacktestSession {
     /** Represents the list of candlestick data points used during a backtesting session. */
     private final List<CandleDTO> data;
 
@@ -42,7 +46,7 @@ public class BackTestSession {
      * @param strategy the strategy to use for backtesting
      * @param data the list of candlestick data points that will be processed
      */
-    public BackTestSession(final Strategy strategy, final List<CandleDTO> data) {
+    public BacktestSession(final Strategy strategy, final List<CandleDTO> data) {
         this.strategy = strategy;
         this.data = data;
         this.orders = new ArrayList<>();
@@ -75,7 +79,7 @@ public class BackTestSession {
                 updateOrders(candle);
             }
         } catch (Exception e) {
-            System.out.println("BackTestSession.start() - Exception: " + e.getMessage());
+            System.out.println("BacktestSession.start() - Exception: " + e.getMessage());
             this.status = SessionStatus.FAILED;
             return;
         }
