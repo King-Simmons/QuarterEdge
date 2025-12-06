@@ -15,57 +15,57 @@ import com.quarteredge.core.model.Direction;
 import com.quarteredge.core.model.OrderDTO;
 import com.quarteredge.core.model.OrderStatus;
 import com.quarteredge.core.model.SessionStatus;
-import com.quarteredge.core.strategy.EmaCrossoverStrategy;
 import com.quarteredge.core.strategy.Strategy;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 public class BacktestSessionTest {
-    private BacktestSession backtestSession;
+    /** A mocked strategy instance for testing. */
     private final Strategy mockedStrategy = mock();
-    private final List<CandleDTO> mockedData = mock();
-    private BacktestSession mockedBacktestSession;
-    private final EmaCrossoverStrategy EmaStrategy = new EmaCrossoverStrategy(1, 2, .1);
-    private final List<CandleDTO> data = createDefaultCandleList();
 
-    @BeforeEach
-    void init() {
-        backtestSession = new BacktestSession(EmaStrategy, data);
-    }
+    /** A mocked backtest session instance for testing. */
+    private BacktestSession mockedBacktestSession;
+
+    /** A list of candles for testing. */
+    private final List<CandleDTO> data = createDefaultCandleList();
 
     @Test
     @DisplayName("Backtest should start with PENDING status")
     void testBacktestSessionPending() {
-        assertEquals(SessionStatus.PENDING, backtestSession.getStatus());
+        mockedBacktestSession = new BacktestSession(mockedStrategy, data);
+        assertEquals(SessionStatus.PENDING, mockedBacktestSession.getStatus());
     }
 
     @Test
     @DisplayName("startSession() should complete successfully")
     void testBacktestSessionSuccess() {
-        backtestSession.startSession();
-        assertEquals(SessionStatus.COMPLETED, backtestSession.getStatus());
+        mockedBacktestSession = new BacktestSession(mockedStrategy, data);
+        mockedBacktestSession.startSession();
+        assertEquals(SessionStatus.COMPLETED, mockedBacktestSession.getStatus());
     }
 
     @Test
     @DisplayName("startSession() should return immediately if not PENDING")
     void testBacktestSessionNotPending() {
+        mockedBacktestSession = new BacktestSession(mockedStrategy, data);
         for (SessionStatus status : SessionStatus.values()) {
-            if (status == SessionStatus.PENDING) continue;
+            if (status == SessionStatus.PENDING) {
+                continue;
+            }
             setStatus(status);
-            backtestSession.startSession();
-            assertEquals(status, backtestSession.getStatus());
+            mockedBacktestSession.startSession();
+            assertEquals(status, mockedBacktestSession.getStatus());
         }
     }
 
     @Test
     @DisplayName("startSession() should return FAILED for any exception")
     void testBackestSessionFailed() {
-        mockedBacktestSession = new BacktestSession(mockedStrategy, mockedData);
+        mockedBacktestSession = new BacktestSession(mockedStrategy, data);
         when(mockedStrategy.getStatus()).thenThrow(new RuntimeException());
         mockedBacktestSession.startSession();
         assertEquals(SessionStatus.FAILED, mockedBacktestSession.getStatus());
@@ -187,7 +187,7 @@ public class BacktestSessionTest {
                         .getFirst();
         field.setAccessible(true);
         try {
-            field.set(backtestSession, status);
+            field.set(mockedBacktestSession, status);
         } catch (Exception e) {
             IO.println(e.getMessage());
         }

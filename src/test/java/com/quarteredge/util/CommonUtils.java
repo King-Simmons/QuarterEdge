@@ -16,6 +16,12 @@ public class CommonUtils {
         return new CandleDTO("", "09:30:00", 2, 2, 2, close, 2);
     }
 
+    /**
+     * Creates a list of {@link CandleDTO} instances with placeholder values for other fields to
+     * facilitate testing.
+     *
+     * @return a list of {@link CandleDTO} instances
+     */
     public static List<CandleDTO> createDefaultCandleList() {
         List<CandleDTO> defaultList = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
