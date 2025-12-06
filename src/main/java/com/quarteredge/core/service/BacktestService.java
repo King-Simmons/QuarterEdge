@@ -1,6 +1,6 @@
 package com.quarteredge.core.service;
 
-import com.quarteredge.core.model.BackTestSession;
+import com.quarteredge.core.component.BacktestSession;
 import com.quarteredge.core.strategy.Strategy;
 import com.quarteredge.core.util.Parser;
 import java.io.File;
@@ -31,7 +31,7 @@ public class BacktestService {
                 .forEach(
                         (key, value) -> {
                             IO.println(key);
-                            var backTestSession = new BackTestSession(strategy, value);
+                            var backTestSession = new BacktestSession(strategy, value);
                             IO.println(backTestSession.getStatus());
                             backTestSession.startSession();
                             IO.println(backTestSession.getStatus());
