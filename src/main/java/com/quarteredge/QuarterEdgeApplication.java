@@ -1,9 +1,7 @@
 package com.quarteredge;
 
-import com.quarteredge.core.model.BackTestSession;
+import com.quarteredge.core.service.BacktestService;
 import com.quarteredge.core.strategy.EmaCrossoverStrategy;
-import com.quarteredge.core.util.Parser;
-import java.io.File;
 
 /**
  * Main application class for QuarterEdge. This class serves as the entry point for the QuarterEdge
@@ -22,18 +20,8 @@ public class QuarterEdgeApplication {
     /** Application entry point. Prints "Hello World" to the standard output stream. */
     static void main() {
         System.out.println("Hello World");
-        var parser = new Parser(new File("data/CL_5min_sample.csv"));
-        parser.parse();
         var strategy = new EmaCrossoverStrategy(FAST_EMA_PERIOD, SLOW_EMA_PERIOD, INCREMENT);
-        parser.getSessionMap()
-                .forEach(
-                        (key, value) -> {
-                            IO.println(key);
-                            var backTestSession = new BackTestSession(strategy, value);
-                            IO.println(backTestSession.getStatus());
-                            backTestSession.startSession();
-                            IO.println(backTestSession.getStatus());
-                            backTestSession.getOrders().forEach(IO::println);
-                        });
+        BacktestService backtestService = new BacktestService(strategy, "data/CL_5min_sample.csv");
+        backtestService.run();
     }
 }
