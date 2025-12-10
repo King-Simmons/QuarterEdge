@@ -1,5 +1,8 @@
 package com.quarteredge.core.indicator;
 
+import static com.quarteredge.core.util.Constants.RDR_SESSION_END_TIME;
+import static com.quarteredge.core.util.Constants.RDR_SESSION_START_TIME;
+
 import com.quarteredge.core.model.CandleDTO;
 import com.quarteredge.core.model.DailyRangeDTO;
 
@@ -17,24 +20,23 @@ public class DailyRangeIndicator implements Indicator {
     }
 
     public void add(CandleDTO data) {
+        if (data.time().isBefore(RDR_SESSION_START_TIME)) {
+            this.isActive = false;
+        }
         if (isActive) {
             return;
         }
-        if (data.time().equals("09:30:00")) {
+        if (data.time().isAfter(RDR_SESSION_START_TIME)
+                && data.time().isBefore(RDR_SESSION_END_TIME)) {
             drHigh = Math.max(drHigh, data.high());
             drLow = Math.min(drLow, data.low());
             idrHigh = Math.max(idrHigh, data.close());
             idrLow = Math.min(idrLow, data.close());
         }
 
-        drHigh = Math.max(drHigh, data.high());
-        drLow = Math.min(drLow, data.low());
-        idrHigh = Math.max(idrHigh, data.close());
-        idrLow = Math.min(idrLow, data.close());
-
-        if (data.time().equals("10:25:00")) {
+        if (data.time().equals(RDR_SESSION_END_TIME) || data.time().isAfter(RDR_SESSION_END_TIME)) {
             isActive = true;
-            dailyRangeDTO = new DailyRangeDTO(isActive, drHigh, drLow, idrHigh, idrLow);
+            dailyRangeDTO = new DailyRangeDTO(true, drHigh, drLow, idrHigh, idrLow);
         }
     }
 

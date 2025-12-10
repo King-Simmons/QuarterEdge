@@ -45,6 +45,12 @@ public final class Constants {
     /** The time of the first candle in a trading session (DAY). */
     public static final LocalTime FIRST_CANDLE_OPEN_TIME = LocalTime.of(18, 0, 0);
 
+    /** The time of the first candle in the RDR session */
+    public static final LocalTime RDR_SESSION_START_TIME = LocalTime.of(9, 29, 59);
+
+    /** The time of the last candle in the RDR session */
+    public static final LocalTime RDR_SESSION_END_TIME = LocalTime.of(10, 30, 0);
+
     /** The formatter for parsing Date Time. */
     public static final DateTimeFormatter DATE_TIME_DEFAULT_FORMAT =
             DateTimeFormatter.ofPattern("HH:mm:ss");
