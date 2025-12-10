@@ -28,7 +28,7 @@ public interface Indicator {
     /**
      * Returns the current calculated value of the indicator.
      *
-     * @return the most recent calculated indicator value as a {@link BigDecimal}, or -1 if
+     * @return the most recent calculated indicator value as a {@link Object}, or null if
      *     insufficient data is available for calculation
      */
     Object get();
