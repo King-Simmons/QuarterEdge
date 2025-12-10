@@ -1,8 +1,10 @@
 package com.quarteredge.core.model;
 
+import java.time.LocalTime;
+
 public record CandleDTO(
         String date,
-        String time,
+        LocalTime time,
         double open,
         double high,
         double low,
