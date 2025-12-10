@@ -32,5 +32,5 @@ public interface Indicator {
      * @return the most recent calculated indicator value as a {@link BigDecimal}, or -1 if
      *     insufficient data is available for calculation
      */
-    BigDecimal get();
+    Object get();
 }
