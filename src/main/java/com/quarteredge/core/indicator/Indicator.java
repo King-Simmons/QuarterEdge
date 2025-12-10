@@ -1,7 +1,6 @@
 package com.quarteredge.core.indicator;
 
 import com.quarteredge.core.model.CandleDTO;
-import java.math.BigDecimal;
 
 /**
  * Represents a technical indicator that processes candlestick data and provides calculated values.

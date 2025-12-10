@@ -39,16 +39,16 @@ public final class Constants {
     /** Index position for the volume field in CSV data records. */
     public static final int VOLUME_INDEX = 6;
 
-    /** The time of the last candle in a trading session (DAY). */
+    /** The time of the last candle in a trading session. (DAY). */
     public static final LocalTime LAST_CANDLE_CLOSE_TIME = LocalTime.of(16, 55, 0);
 
-    /** The time of the first candle in a trading session (DAY). */
+    /** The time of the first candle in a trading session. (DAY). */
     public static final LocalTime FIRST_CANDLE_OPEN_TIME = LocalTime.of(18, 0, 0);
 
-    /** The time of the first candle in the RDR session */
+    /** The time of the first candle in the RDR session. */
     public static final LocalTime RDR_SESSION_START_TIME = LocalTime.of(9, 29, 59);
 
-    /** The time of the last candle in the RDR session */
+    /** The time of the last candle in the RDR session. */
     public static final LocalTime RDR_SESSION_END_TIME = LocalTime.of(10, 30, 0);
 
     /** The formatter for parsing Date Time. */
