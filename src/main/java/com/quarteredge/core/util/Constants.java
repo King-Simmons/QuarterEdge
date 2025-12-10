@@ -1,5 +1,8 @@
 package com.quarteredge.core.util;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+
 /**
  * Defines constant index positions for accessing fields in CSV trading data records.
  *
@@ -37,8 +40,12 @@ public final class Constants {
     public static final int VOLUME_INDEX = 6;
 
     /** The time of the last candle in a trading session (DAY). */
-    public static final String LAST_CANDLE_CLOSE_TIME = "16:55:00";
+    public static final LocalTime LAST_CANDLE_CLOSE_TIME = LocalTime.of(16, 55, 0);
 
     /** The time of the first candle in a trading session (DAY). */
-    public static final String FIRST_CANDLE_OPEN_TIME = "18:00:00";
+    public static final LocalTime FIRST_CANDLE_OPEN_TIME = LocalTime.of(18, 0, 0);
+
+    /** The formatter for parsing Date Time. */
+    public static final DateTimeFormatter DATE_TIME_DEFAULT_FORMAT =
+            DateTimeFormatter.ofPattern("HH:mm:ss");
 }

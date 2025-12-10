@@ -2,7 +2,9 @@ package com.quarteredge.core.util;
 
 import static com.quarteredge.core.util.Constants.CLOSE_INDEX;
 import static com.quarteredge.core.util.Constants.DATE_INDEX;
+import static com.quarteredge.core.util.Constants.DATE_TIME_DEFAULT_FORMAT;
 import static com.quarteredge.core.util.Constants.HIGH_INDEX;
+import static com.quarteredge.core.util.Constants.LAST_CANDLE_CLOSE_TIME;
 import static com.quarteredge.core.util.Constants.LOW_INDEX;
 import static com.quarteredge.core.util.Constants.OPEN_INDEX;
 import static com.quarteredge.core.util.Constants.TIME_INDEX;
@@ -12,6 +14,7 @@ import com.quarteredge.core.model.CandleDTO;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -77,7 +80,7 @@ public class Parser {
                 var data =
                         new CandleDTO(
                                 currLine.get(DATE_INDEX),
-                                currLine.get(TIME_INDEX),
+                                LocalTime.parse(currLine.get(TIME_INDEX), DATE_TIME_DEFAULT_FORMAT),
                                 Double.parseDouble(currLine.get(OPEN_INDEX)),
                                 Double.parseDouble(currLine.get(HIGH_INDEX)),
                                 Double.parseDouble(currLine.get(LOW_INDEX)),
@@ -85,7 +88,7 @@ public class Parser {
                                 Double.parseDouble(currLine.get(VOLUME_INDEX)));
                 currSession.add(data);
 
-                if (data.time().equals("16:55:00")) {
+                if (data.time().equals(LAST_CANDLE_CLOSE_TIME)) {
                     sessionMap.put(data.date(), new ArrayList<>(currSession));
                     currSession.clear();
                 }

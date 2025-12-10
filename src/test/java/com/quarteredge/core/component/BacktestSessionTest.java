@@ -1,5 +1,6 @@
 package com.quarteredge.core.component;
 
+import static com.quarteredge.core.util.Constants.FIRST_CANDLE_OPEN_TIME;
 import static com.quarteredge.core.util.Constants.LAST_CANDLE_CLOSE_TIME;
 import static com.quarteredge.util.CommonUtils.createDefaultCandleList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,6 +18,7 @@ import com.quarteredge.core.model.OrderStatus;
 import com.quarteredge.core.model.SessionStatus;
 import com.quarteredge.core.strategy.Strategy;
 import java.lang.reflect.Field;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -32,6 +34,12 @@ public class BacktestSessionTest {
 
     /** A list of candles for testing. */
     private final List<CandleDTO> data = createDefaultCandleList();
+
+    /** A default time to test with. */
+    private final LocalTime testLocalTime1 = LocalTime.of(9, 35, 0);
+
+    /** A second default time to test with. */
+    private final LocalTime testLocalTime2 = LocalTime.of(7, 30, 0);
 
     @Test
     @DisplayName("Backtest should start with PENDING status")
@@ -77,7 +85,7 @@ public class BacktestSessionTest {
                     + " (18:00:00)")
     void testBacktestSessionNoOrdersAtSessionStartTime() {
         var list = new ArrayList<CandleDTO>();
-        list.add(new CandleDTO("", "18:00:00", 2, 2, 2, 3, 2));
+        list.add(new CandleDTO("", FIRST_CANDLE_OPEN_TIME, 2, 2, 2, 3, 2));
         mockedBacktestSession = new BacktestSession(mockedStrategy, list);
         mockedBacktestSession.startSession();
         verify(mockedStrategy, times(1)).push(any());
@@ -101,12 +109,19 @@ public class BacktestSessionTest {
                 .getOrders()
                 .add(
                         new OrderDTO(
-                                1, 2, 1.5, -1, Direction.BUY, "07:30:00", "", OrderStatus.ACTIVE));
+                                1,
+                                2,
+                                1.5,
+                                -1,
+                                Direction.BUY,
+                                testLocalTime2,
+                                null,
+                                OrderStatus.ACTIVE));
         mockedBacktestSession.startSession();
         OrderDTO updatedOrder = mockedBacktestSession.getOrders().getFirst();
         assertEquals(OrderStatus.CLOSED_TP_HIT, updatedOrder.status());
         assertEquals(2, updatedOrder.closePrice());
-        assertEquals("09:30:00", updatedOrder.closeTime());
+        assertEquals(testLocalTime1, updatedOrder.closeTime());
     }
 
     @Test
@@ -117,12 +132,19 @@ public class BacktestSessionTest {
                 .getOrders()
                 .add(
                         new OrderDTO(
-                                2, 1, 1.5, -1, Direction.SELL, "07:30:00", "", OrderStatus.ACTIVE));
+                                2,
+                                1,
+                                1.5,
+                                -1,
+                                Direction.SELL,
+                                testLocalTime2,
+                                null,
+                                OrderStatus.ACTIVE));
         mockedBacktestSession.startSession();
         OrderDTO updatedOrder = mockedBacktestSession.getOrders().getFirst();
         assertEquals(OrderStatus.CLOSED_SL_HIT, updatedOrder.status());
         assertEquals(2, updatedOrder.closePrice());
-        assertEquals("09:30:00", updatedOrder.closeTime());
+        assertEquals(testLocalTime1, updatedOrder.closeTime());
     }
 
     @Test
@@ -139,12 +161,21 @@ public class BacktestSessionTest {
                                 150.5,
                                 -1,
                                 Direction.BUY,
-                                "07:30:00",
-                                "",
+                                testLocalTime2,
+                                null,
                                 OrderStatus.ACTIVE));
         mockedBacktestSession
                 .getOrders()
-                .add(new OrderDTO(110, 200, 150.5, -1, Direction.BUY, "", "", OrderStatus.PENDING));
+                .add(
+                        new OrderDTO(
+                                110,
+                                200,
+                                150.5,
+                                -1,
+                                Direction.BUY,
+                                null,
+                                null,
+                                OrderStatus.PENDING));
 
         mockedBacktestSession.startSession();
         OrderDTO updatedOrder = mockedBacktestSession.getOrders().get(0);
@@ -157,7 +188,7 @@ public class BacktestSessionTest {
     @Test
     @DisplayName("updateOrders() should return CLOSED_UNKNOWN when both SL and TP are hit")
     void testDetermineCloseStatusWhenBothSlAndTpHit() {
-        data.add(new CandleDTO("", "09:35:00", 5, 200, 3, 8, 100));
+        data.add(new CandleDTO("", testLocalTime1, 5, 200, 3, 8, 100));
         mockedBacktestSession = new BacktestSession(mockedStrategy, data);
         mockedBacktestSession
                 .getOrders()
@@ -168,14 +199,14 @@ public class BacktestSessionTest {
                                 100.5,
                                 -1,
                                 Direction.BUY,
-                                "07:30:00",
-                                "",
+                                testLocalTime1,
+                                null,
                                 OrderStatus.ACTIVE));
         mockedBacktestSession.startSession();
         OrderDTO updatedOrder = mockedBacktestSession.getOrders().getFirst();
         assertEquals(OrderStatus.CLOSED_UNKNOWN, updatedOrder.status());
         assertEquals(-1, updatedOrder.closePrice());
-        assertEquals("09:35:00", updatedOrder.closeTime());
+        assertEquals(testLocalTime1, updatedOrder.closeTime());
     }
 
     private void setStatus(final SessionStatus status) {

@@ -131,7 +131,6 @@ public class EmaCrossoverStrategy implements Strategy {
         double stopLoss;
         final double stopLossValue = 10;
         final double takeProfitValue = 15;
-        String closeTime = "";
         double closePrice = -1;
 
         if (isBullish) {
@@ -151,7 +150,7 @@ public class EmaCrossoverStrategy implements Strategy {
                 closePrice,
                 direction,
                 currentCandle.time(),
-                closeTime,
+                null,
                 OrderStatus.ACTIVE);
     }
 }
