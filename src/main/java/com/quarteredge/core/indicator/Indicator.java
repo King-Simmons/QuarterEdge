@@ -1,7 +1,6 @@
 package com.quarteredge.core.indicator;
 
 import com.quarteredge.core.model.CandleDTO;
-import java.math.BigDecimal;
 
 /**
  * Represents a technical indicator that processes candlestick data and provides calculated values.
@@ -29,8 +28,8 @@ public interface Indicator {
     /**
      * Returns the current calculated value of the indicator.
      *
-     * @return the most recent calculated indicator value as a {@link BigDecimal}, or -1 if
+     * @return the most recent calculated indicator value as a {@link Object}, or null if
      *     insufficient data is available for calculation
      */
-    BigDecimal get();
+    Object get();
 }
