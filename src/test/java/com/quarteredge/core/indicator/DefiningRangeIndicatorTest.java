@@ -9,9 +9,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class DefiningRangeIndicatorTest {
+    /** The DefiningRangeIndicator instance to be tested. */
     private DefiningRangeIndicator drIndicator;
+
+    /** The test session data to be used for testing. */
     private final List<CandleDTO> testSession = generateTestSession();
 
+    /** Initializes the DefiningRangeIndicator instance before each test. */
     @BeforeEach
     void init() {
         drIndicator = new DefiningRangeIndicator();

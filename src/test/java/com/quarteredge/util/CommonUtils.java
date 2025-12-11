@@ -33,6 +33,12 @@ public class CommonUtils {
         return defaultList;
     }
 
+    /**
+     * Generates a test session by parsing a predefined CSV file containing candlestick data.
+     *
+     * @return a list of {@link CandleDTO} objects representing the parsed candlestick data from the
+     *     test session file
+     */
     public static List<CandleDTO> generateTestSession() {
         Parser parser = new Parser(new File("src/test/java/com/quarteredge/util/testSession.csv"));
         parser.parse();
