@@ -1,6 +1,8 @@
 package com.quarteredge.util;
 
 import com.quarteredge.core.model.CandleDTO;
+import com.quarteredge.core.util.Parser;
+import java.io.File;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,5 +31,13 @@ public class CommonUtils {
             defaultList.add(createDefaultCandleWithClose(i));
         }
         return defaultList;
+    }
+
+    public static List<CandleDTO> generateTestSession() {
+        Parser parser = new Parser(new File("src/test/java/com/quarteredge/util/testSession.csv"));
+        parser.parse();
+        List<CandleDTO> testSession = new ArrayList<>();
+        parser.getSessionMap().values().forEach(testSession::addAll);
+        return testSession;
     }
 }

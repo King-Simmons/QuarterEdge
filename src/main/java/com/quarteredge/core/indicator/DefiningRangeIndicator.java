@@ -28,9 +28,6 @@ import com.quarteredge.core.model.DefiningRangeDTO;
  * @see DefiningRangeDTO
  */
 public class DefiningRangeIndicator implements Indicator {
-    /** Flag indicating if the daily range calculation is complete for the current session. */
-    private boolean isActive;
-
     /** The highest price observed during the RTH session. */
     private double drHigh;
 
@@ -43,6 +40,9 @@ public class DefiningRangeIndicator implements Indicator {
     /** The lowest closing price observed during the RTH session. */
     private double idrLow;
 
+    /** Flag indicating if a breakout has occurred. */
+    private boolean breakoutHasOccurred;
+
     /** The DTO containing the calculated defining range values. */
     private DefiningRangeDTO definingRangeDTO;
 
@@ -51,8 +51,8 @@ public class DefiningRangeIndicator implements Indicator {
      * inactive state with all range values set to -1.
      */
     public DefiningRangeIndicator() {
-        this.isActive = false;
-        this.definingRangeDTO = new DefiningRangeDTO(false, -1, -1, -1, -1);
+        definingRangeDTO = null;
+        breakoutHasOccurred = false;
     }
 
     /**
@@ -73,11 +73,14 @@ public class DefiningRangeIndicator implements Indicator {
      */
     public void add(final CandleDTO data) {
         if (data.time().isBefore(RDR_SESSION_START_TIME)) {
-            this.isActive = false;
+            definingRangeDTO = null;
+            breakoutHasOccurred = false;
+            drHigh = -1;
+            drLow = Double.MAX_VALUE;
+            idrHigh = -1;
+            idrLow = Double.MAX_VALUE;
         }
-        if (isActive) {
-            return;
-        }
+
         if (data.time().isAfter(RDR_SESSION_START_TIME)
                 && data.time().isBefore(RDR_SESSION_END_TIME)) {
             drHigh = Math.max(drHigh, data.high());
@@ -87,8 +90,15 @@ public class DefiningRangeIndicator implements Indicator {
         }
 
         if (data.time().equals(RDR_SESSION_END_TIME) || data.time().isAfter(RDR_SESSION_END_TIME)) {
-            isActive = true;
-            definingRangeDTO = new DefiningRangeDTO(true, drHigh, drLow, idrHigh, idrLow);
+            definingRangeDTO = new DefiningRangeDTO(drHigh, drLow, idrHigh, idrLow);
+        }
+        if (definingRangeDTO != null) {
+            if (data.close() > drHigh
+                    || data.close() < drLow
+                    || data.open() > drHigh
+                    || data.open() < drLow) {
+                this.breakoutHasOccurred = true;
+            }
         }
     }
 
@@ -96,9 +106,18 @@ public class DefiningRangeIndicator implements Indicator {
      * Returns the current state of the defining range calculations.
      *
      * @return a {@link DefiningRangeDTO} containing the current DR and IDR values. If the session
-     *     is not yet complete, the DTO will have isActive set to false.
+     *     is not yet complete, the DTO will be null
      */
     public DefiningRangeDTO get() {
         return definingRangeDTO;
+    }
+
+    /**
+     * Returns the breakout has occurred flag.
+     *
+     * @return true if a breakout has occurred, false otherwise
+     */
+    public boolean hasBreakoutOccurred() {
+        return breakoutHasOccurred;
     }
 }
