@@ -40,7 +40,7 @@ public class CommonUtils {
      *     test session file
      */
     public static List<CandleDTO> generateTestSession() {
-        Parser parser = new Parser(new File("src/test/java/com/quarteredge/util/testSession.csv"));
+        var parser = new Parser(new File("src/test/java/com/quarteredge/util/testSession.csv"));
         parser.parse();
         List<CandleDTO> testSession = new ArrayList<>();
         parser.getSessionMap().values().forEach(testSession::addAll);
