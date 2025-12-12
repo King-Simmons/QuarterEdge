@@ -1,6 +1,8 @@
 package com.quarteredge.core.indicator;
 
 import com.quarteredge.core.model.CandleDTO;
+import com.quarteredge.core.util.FifoQueue;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayDeque;
@@ -29,7 +31,7 @@ public class EmaIndicator implements Indicator {
      * Queue that maintains the rolling window of price data points. The size of this queue is
      * limited to the specified length.
      */
-    private final Deque<BigDecimal> dataQueue;
+    private final FifoQueue<BigDecimal> dataQueue;
 
     /**
      * The current calculated EMA value. Initialized to -1 to indicate insufficient data for
@@ -52,7 +54,7 @@ public class EmaIndicator implements Indicator {
      * @param length the number of periods to use for the moving average calculation
      */
     public EmaIndicator(final int length) {
-        this.dataQueue = new ArrayDeque<>();
+        this.dataQueue = new FifoQueue<>(length);
         this.val = new BigDecimal(-1);
         this.length = length;
         this.total = new BigDecimal(0);
@@ -97,7 +99,7 @@ public class EmaIndicator implements Indicator {
     private void calculate(final double input) {
         var bd = new BigDecimal(input);
         if (dataQueue.size() == length && length > 0) {
-            total = total.subtract(dataQueue.pollFirst());
+            total = total.subtract(dataQueue.poll());
         }
         total = total.add(bd);
         dataQueue.add(bd);
