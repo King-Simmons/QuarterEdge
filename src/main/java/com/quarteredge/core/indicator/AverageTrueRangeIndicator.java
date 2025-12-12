@@ -8,32 +8,46 @@ import java.math.RoundingMode;
 public class AverageTrueRangeIndicator implements Indicator {
     private final int length;
     private final FifoQueue<BigDecimal> dataQueue;
-    private BigDecimal val;
-    private BigDecimal total;
+    private BigDecimal atr;
 
     public AverageTrueRangeIndicator(int length) {
         this.length = length;
         this.dataQueue = new FifoQueue<>(length);
-        this.val = new BigDecimal(-1);
-        this.total = new BigDecimal(0);
+        this.atr = new BigDecimal(-1);
     }
 
     @Override
     public void add(CandleDTO data) {
-        calculate(data.close());
+        calculate(
+                new BigDecimal(data.high()),
+                new BigDecimal(data.low()),
+                new BigDecimal(data.close()));
     }
 
     @Override
     public BigDecimal get() {
-        return val;
+        return atr;
     }
 
-    private void calculate(double input) {
-        if (dataQueue.size() == length && length > 0) {
-            total = total.subtract(dataQueue.poll());
+    private void calculate(BigDecimal high, BigDecimal low, BigDecimal close) {
+        BigDecimal trueRange = high.subtract(low).setScale(2, RoundingMode.HALF_UP);
+        trueRange = trueRange.max(high.subtract(close).setScale(2, RoundingMode.HALF_UP));
+        trueRange = trueRange.max(low.subtract(close).setScale(2, RoundingMode.HALF_UP));
+        dataQueue.add(trueRange);
+        if (dataQueue.size() < length) {
+            if (dataQueue.size() == length) {
+                BigDecimal total = new BigDecimal(0);
+                for (BigDecimal value : dataQueue.getQueue()) {
+                    total = total.add(value);
+                }
+                atr = total.divide(new BigDecimal(length), 2, RoundingMode.HALF_UP);
+            }
+        } else {
+            atr =
+                    atr.multiply(new BigDecimal(length - 1))
+                            .add(trueRange)
+                            .divide(new BigDecimal(length), RoundingMode.HALF_UP)
+                            .setScale(2, RoundingMode.HALF_UP);
         }
-        total = total.add(new BigDecimal(input));
-        dataQueue.add(new BigDecimal(input));
-        val = total.divide(new BigDecimal(length), 2, RoundingMode.HALF_UP);
     }
 }

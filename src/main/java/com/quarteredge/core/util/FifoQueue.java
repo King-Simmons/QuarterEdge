@@ -25,4 +25,8 @@ public class FifoQueue<E> {
     public E poll() {
         return queue.poll();
     }
+
+    public ArrayDeque<E> getQueue() {
+        return queue;
+    }
 }
