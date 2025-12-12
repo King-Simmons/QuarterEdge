@@ -54,4 +54,7 @@ public final class Constants {
     /** The formatter for parsing Date Time. */
     public static final DateTimeFormatter DATE_TIME_DEFAULT_FORMAT =
             DateTimeFormatter.ofPattern("HH:mm:ss");
+
+    /** The increment value for the Quarter Level calculation. */
+    public static final int QUARTER_LEVEL_INCREMENT = 25;
 }
