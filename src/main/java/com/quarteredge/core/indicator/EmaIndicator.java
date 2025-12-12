@@ -5,8 +5,6 @@ import com.quarteredge.core.util.FifoQueue;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayDeque;
-import java.util.Deque;
 
 /**
  * Simple Moving Average (SMA) indicator implementation.

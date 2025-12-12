@@ -8,7 +8,7 @@ public class FifoQueue<E> {
 
     public FifoQueue(int capacity) {
         this.capacity = capacity;
-        this.queue = new ArrayDeque<E>(capacity);
+        this.queue = new ArrayDeque<>(capacity);
     }
 
     public void add(E e) {
