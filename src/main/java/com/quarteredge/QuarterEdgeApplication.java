@@ -1,7 +1,7 @@
 package com.quarteredge;
 
 import com.quarteredge.core.service.BacktestService;
-import com.quarteredge.core.strategy.EmaCrossoverStrategy;
+import com.quarteredge.core.strategy.MovingAverageCrossoverStrategy;
 
 /**
  * Main application class for QuarterEdge. This class serves as the entry point for the QuarterEdge
@@ -20,7 +20,7 @@ public class QuarterEdgeApplication {
     /** Application entry point. Prints "Hello World" to the standard output stream. */
     static void main() {
         System.out.println("Hello World");
-        var strategy = new EmaCrossoverStrategy(FAST_EMA_PERIOD, SLOW_EMA_PERIOD, INCREMENT);
+        var strategy = new MovingAverageCrossoverStrategy(FAST_EMA_PERIOD, SLOW_EMA_PERIOD, INCREMENT);
         BacktestService backtestService = new BacktestService(strategy, "data/CL_5min_sample.csv");
         backtestService.run();
     }
