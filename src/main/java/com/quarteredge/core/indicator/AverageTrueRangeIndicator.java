@@ -30,11 +30,13 @@ public class AverageTrueRangeIndicator implements Indicator {
     }
 
     private void calculate(BigDecimal high, BigDecimal low, BigDecimal close) {
-        BigDecimal trueRange = high.subtract(low).setScale(2, RoundingMode.HALF_UP);
-        trueRange = trueRange.max(high.subtract(close).setScale(2, RoundingMode.HALF_UP));
-        trueRange = trueRange.max(low.subtract(close).setScale(2, RoundingMode.HALF_UP));
-        dataQueue.add(trueRange);
+        BigDecimal trueRange = high.subtract(low).setScale(2, RoundingMode.HALF_DOWN);
+        trueRange = trueRange.max(high.subtract(close).setScale(2, RoundingMode.HALF_DOWN));
+        trueRange = trueRange.max(low.subtract(close).setScale(2, RoundingMode.HALF_DOWN));
+        // IO.println(trueRange);
         if (dataQueue.size() < length) {
+            dataQueue.add(trueRange);
+
             if (dataQueue.size() == length) {
                 BigDecimal total = new BigDecimal(0);
                 for (BigDecimal value : dataQueue.getQueue()) {
@@ -43,11 +45,12 @@ public class AverageTrueRangeIndicator implements Indicator {
                 atr = total.divide(new BigDecimal(length), 2, RoundingMode.HALF_UP);
             }
         } else {
+            dataQueue.add(trueRange);
+            IO.println(atr);
             atr =
                     atr.multiply(new BigDecimal(length - 1))
                             .add(trueRange)
-                            .divide(new BigDecimal(length), RoundingMode.HALF_UP)
-                            .setScale(2, RoundingMode.HALF_UP);
+                            .divide(new BigDecimal(length), RoundingMode.HALF_DOWN);
         }
     }
 }

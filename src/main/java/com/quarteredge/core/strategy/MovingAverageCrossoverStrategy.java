@@ -1,6 +1,6 @@
 package com.quarteredge.core.strategy;
 
-import com.quarteredge.core.indicator.EmaIndicator;
+import com.quarteredge.core.indicator.MovingAverageIndicator;
 import com.quarteredge.core.model.CandleDTO;
 import com.quarteredge.core.model.Direction;
 import com.quarteredge.core.model.OrderDTO;
@@ -8,24 +8,25 @@ import com.quarteredge.core.model.OrderStatus;
 import java.util.Optional;
 
 /**
- * EMA Crossover Strategy implementation. (Example)
+ * Moving Average Crossover Strategy implementation. (Example)
  *
- * <p>This sample strategy uses two Exponential Moving Averages (EMAs) to determine when to enter
- * and exit trades. It is based on the crossover of the fast EMA over the slow EMA, indicating a
+ * <p>This sample strategy uses two Moving Averages to determine when to enter
+ * and exit trades. It is based on the crossover of the faster moving average over
+ * the slower moving average, indicating a
  * potential trend change.
  *
  * @author King Simmons
  * @version 1.0
  * @since 1.0
- * @see EmaIndicator
+ * @see MovingAverageIndicator
  * @see OrderDTO
  */
-public class EmaCrossoverStrategy implements Strategy {
+public class MovingAverageCrossoverStrategy implements Strategy {
     /** Fast EMA indicator used to determine when to enter and exit trades. */
-    private final EmaIndicator fastEma;
+    private final MovingAverageIndicator fastEma;
 
     /** Slow EMA indicator used to determine when to enter and exit trades. */
-    private final EmaIndicator slowEma;
+    private final MovingAverageIndicator slowEma;
 
     /**
      * A flag indicating whether the current market trend is considered bullish. This variable is
@@ -58,10 +59,10 @@ public class EmaCrossoverStrategy implements Strategy {
      * @param slowPeriod the period for the slow EMA
      * @param increment the increment value for price calculations
      */
-    public EmaCrossoverStrategy(
+    public MovingAverageCrossoverStrategy(
             final int fastPeriod, final int slowPeriod, final double increment) {
-        this.fastEma = new EmaIndicator(fastPeriod);
-        this.slowEma = new EmaIndicator(slowPeriod);
+        this.fastEma = new MovingAverageIndicator(fastPeriod);
+        this.slowEma = new MovingAverageIndicator(slowPeriod);
         this.isBullish = false;
         this.currentCandle = null;
         this.increment = increment;

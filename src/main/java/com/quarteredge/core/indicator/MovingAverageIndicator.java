@@ -2,7 +2,6 @@ package com.quarteredge.core.indicator;
 
 import com.quarteredge.core.model.CandleDTO;
 import com.quarteredge.core.util.FifoQueue;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -14,17 +13,13 @@ import java.math.RoundingMode;
  * indicator uses {@link BigDecimal} for precise financial calculations and {@link
  * RoundingMode#HALF_UP} for rounding.
  *
- * <p>Note: Despite the class name, this is currently implementing an SMA (Simple Moving Average),
- * not a true EMA (Exponential Moving Average). An EMA would apply exponential weighting to give
- * more importance to recent prices.
- *
  * @author King Simmons
  * @version 1.0
  * @since 1.0
  * @see Indicator
  * @see CandleDTO
  */
-public class EmaIndicator implements Indicator {
+public class MovingAverageIndicator implements Indicator {
     /**
      * Queue that maintains the rolling window of price data points. The size of this queue is
      * limited to the specified length.
@@ -51,7 +46,7 @@ public class EmaIndicator implements Indicator {
      *
      * @param length the number of periods to use for the moving average calculation
      */
-    public EmaIndicator(final int length) {
+    public MovingAverageIndicator(final int length) {
         this.dataQueue = new FifoQueue<>(length);
         this.val = new BigDecimal(-1);
         this.length = length;

@@ -9,10 +9,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit tests for {@link EmaIndicator}.
+ * Unit tests for {@link MovingAverageIndicator}.
  *
  * <p>These tests validate the rolling-window simple moving average behavior currently implemented
- * in {@link EmaIndicator} (despite the EMA name), including:
+ * in {@link MovingAverageIndicator} (despite the EMA name), including:
  *
  * <ul>
  *   <li>Returning -1 when insufficient data points are available
@@ -20,23 +20,23 @@ import org.junit.jupiter.api.Test;
  *   <li>Using only the most recent values when the window advances
  * </ul>
  *
- * @see EmaIndicator
+ * @see MovingAverageIndicator
  */
-public class EmaIndicatorTest {
-    /** The {@link EmaIndicator} instance under test, configured with a period length of 3. */
-    private EmaIndicator ema;
+public class MovingAverageIndicatorTest {
+    /** The {@link MovingAverageIndicatorTest} instance under test, configured with a period length of 3. */
+    private MovingAverageIndicator ema;
 
-    /** The period length for the {@link EmaIndicator} under test. */
+    /** The period length for the {@link MovingAverageIndicator} under test. */
     private static final int PERIOD = 3;
 
-    /** Initializes a new {@link EmaIndicator} with a period length of 3 before each test. */
+    /** Initializes a new {@link MovingAverageIndicator} with a period length of 3 before each test. */
     @BeforeEach
     void init() {
-        ema = new EmaIndicator(PERIOD);
+        ema = new MovingAverageIndicator(PERIOD);
     }
 
     /**
-     * Verifies that {@link EmaIndicator#get()} returns {@code -1} when fewer than the required
+     * Verifies that {@link MovingAverageIndicator#get()} returns {@code -1} when fewer than the required
      * number of data points have been added.
      */
     @Test
