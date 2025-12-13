@@ -9,10 +9,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit tests for {@link EmaIndicator}.
+ * Unit tests for {@link MovingAverageIndicator}.
  *
  * <p>These tests validate the rolling-window simple moving average behavior currently implemented
- * in {@link EmaIndicator} (despite the EMA name), including:
+ * in {@link MovingAverageIndicator} (despite the EMA name), including:
  *
  * <ul>
  *   <li>Returning -1 when insufficient data points are available
@@ -20,29 +20,34 @@ import org.junit.jupiter.api.Test;
  *   <li>Using only the most recent values when the window advances
  * </ul>
  *
- * @see EmaIndicator
+ * @see MovingAverageIndicator
  */
-public class EmaIndicatorTest {
-    /** The {@link EmaIndicator} instance under test, configured with a period length of 3. */
-    private EmaIndicator ema;
+public class MovingAverageIndicatorTest {
+    /**
+     * The {@link MovingAverageIndicatorTest} instance under test, configured with a period length
+     * of 3.
+     */
+    private MovingAverageIndicator ma;
 
-    /** The period length for the {@link EmaIndicator} under test. */
+    /** The period length for the {@link MovingAverageIndicator} under test. */
     private static final int PERIOD = 3;
 
-    /** Initializes a new {@link EmaIndicator} with a period length of 3 before each test. */
+    /**
+     * Initializes a new {@link MovingAverageIndicator} with a period length of 3 before each test.
+     */
     @BeforeEach
     void init() {
-        ema = new EmaIndicator(PERIOD);
+        ma = new MovingAverageIndicator(PERIOD);
     }
 
     /**
-     * Verifies that {@link EmaIndicator#get()} returns {@code -1} when fewer than the required
-     * number of data points have been added.
+     * Verifies that {@link MovingAverageIndicator#get()} returns {@code -1} when fewer than the
+     * required number of data points have been added.
      */
     @Test
     @DisplayName("get() should return -1 when not enough data")
     void testGetInvalid() {
-        assertEquals(new BigDecimal(-1), ema.get());
+        assertEquals(new BigDecimal(-1), ma.get());
     }
 
     /**
@@ -52,11 +57,11 @@ public class EmaIndicatorTest {
     @Test
     @DisplayName("calculate() should return average")
     void testCalculateValid() {
-        ema.add(createDefaultCandleWithClose(2));
-        ema.add(createDefaultCandleWithClose(2));
-        ema.add(createDefaultCandleWithClose(2));
+        ma.add(createDefaultCandleWithClose(2));
+        ma.add(createDefaultCandleWithClose(2));
+        ma.add(createDefaultCandleWithClose(2));
 
-        assertEquals(0, new BigDecimal("2").compareTo(ema.get()));
+        assertEquals(0, new BigDecimal("2").compareTo(ma.get()));
     }
 
     /**
@@ -70,12 +75,12 @@ public class EmaIndicatorTest {
     @Test
     @DisplayName("calculate() should return average based on most recent data")
     void testCalculateValidMostRecent() {
-        ema.add(createDefaultCandleWithClose(0));
-        ema.add(createDefaultCandleWithClose(2));
-        ema.add(createDefaultCandleWithClose(2));
-        assertEquals(0, new BigDecimal("1.33").compareTo(ema.get()));
-        ema.add(createDefaultCandleWithClose(2));
+        ma.add(createDefaultCandleWithClose(0));
+        ma.add(createDefaultCandleWithClose(2));
+        ma.add(createDefaultCandleWithClose(2));
+        assertEquals(0, new BigDecimal("1.33").compareTo(ma.get()));
+        ma.add(createDefaultCandleWithClose(2));
 
-        assertEquals(0, new BigDecimal("2").compareTo(ema.get()));
+        assertEquals(0, new BigDecimal("2").compareTo(ma.get()));
     }
 }

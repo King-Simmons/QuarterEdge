@@ -1,10 +1,9 @@
 package com.quarteredge.core.indicator;
 
 import com.quarteredge.core.model.CandleDTO;
+import com.quarteredge.core.util.FifoQueue;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayDeque;
-import java.util.Deque;
 
 /**
  * Simple Moving Average (SMA) indicator implementation.
@@ -14,25 +13,21 @@ import java.util.Deque;
  * indicator uses {@link BigDecimal} for precise financial calculations and {@link
  * RoundingMode#HALF_UP} for rounding.
  *
- * <p>Note: Despite the class name, this is currently implementing an SMA (Simple Moving Average),
- * not a true EMA (Exponential Moving Average). An EMA would apply exponential weighting to give
- * more importance to recent prices.
- *
  * @author King Simmons
  * @version 1.0
- * @since 1.0
+ * @since 0.1.0
  * @see Indicator
  * @see CandleDTO
  */
-public class EmaIndicator implements Indicator {
+public class MovingAverageIndicator implements Indicator {
     /**
      * Queue that maintains the rolling window of price data points. The size of this queue is
      * limited to the specified length.
      */
-    private final Deque<BigDecimal> dataQueue;
+    private final FifoQueue<BigDecimal> dataQueue;
 
     /**
-     * The current calculated EMA value. Initialized to -1 to indicate insufficient data for
+     * The current calculated MA value. Initialized to -1 to indicate insufficient data for
      * calculation.
      */
     private BigDecimal val;
@@ -47,12 +42,12 @@ public class EmaIndicator implements Indicator {
     private BigDecimal total;
 
     /**
-     * Constructs a new EMA indicator with the specified period length.
+     * Constructs a new MA indicator with the specified period length.
      *
      * @param length the number of periods to use for the moving average calculation
      */
-    public EmaIndicator(final int length) {
-        this.dataQueue = new ArrayDeque<>();
+    public MovingAverageIndicator(final int length) {
+        this.dataQueue = new FifoQueue<>(length);
         this.val = new BigDecimal(-1);
         this.length = length;
         this.total = new BigDecimal(0);
@@ -97,7 +92,7 @@ public class EmaIndicator implements Indicator {
     private void calculate(final double input) {
         var bd = new BigDecimal(input);
         if (dataQueue.size() == length && length > 0) {
-            total = total.subtract(dataQueue.pollFirst());
+            total = total.subtract(dataQueue.poll());
         }
         total = total.add(bd);
         dataQueue.add(bd);
