@@ -27,7 +27,7 @@ public class MovingAverageIndicatorTest {
      * The {@link MovingAverageIndicatorTest} instance under test, configured with a period length
      * of 3.
      */
-    private MovingAverageIndicator ema;
+    private MovingAverageIndicator ma;
 
     /** The period length for the {@link MovingAverageIndicator} under test. */
     private static final int PERIOD = 3;
@@ -37,7 +37,7 @@ public class MovingAverageIndicatorTest {
      */
     @BeforeEach
     void init() {
-        ema = new MovingAverageIndicator(PERIOD);
+        ma = new MovingAverageIndicator(PERIOD);
     }
 
     /**
@@ -47,7 +47,7 @@ public class MovingAverageIndicatorTest {
     @Test
     @DisplayName("get() should return -1 when not enough data")
     void testGetInvalid() {
-        assertEquals(new BigDecimal(-1), ema.get());
+        assertEquals(new BigDecimal(-1), ma.get());
     }
 
     /**
@@ -57,11 +57,11 @@ public class MovingAverageIndicatorTest {
     @Test
     @DisplayName("calculate() should return average")
     void testCalculateValid() {
-        ema.add(createDefaultCandleWithClose(2));
-        ema.add(createDefaultCandleWithClose(2));
-        ema.add(createDefaultCandleWithClose(2));
+        ma.add(createDefaultCandleWithClose(2));
+        ma.add(createDefaultCandleWithClose(2));
+        ma.add(createDefaultCandleWithClose(2));
 
-        assertEquals(0, new BigDecimal("2").compareTo(ema.get()));
+        assertEquals(0, new BigDecimal("2").compareTo(ma.get()));
     }
 
     /**
@@ -75,12 +75,12 @@ public class MovingAverageIndicatorTest {
     @Test
     @DisplayName("calculate() should return average based on most recent data")
     void testCalculateValidMostRecent() {
-        ema.add(createDefaultCandleWithClose(0));
-        ema.add(createDefaultCandleWithClose(2));
-        ema.add(createDefaultCandleWithClose(2));
-        assertEquals(0, new BigDecimal("1.33").compareTo(ema.get()));
-        ema.add(createDefaultCandleWithClose(2));
+        ma.add(createDefaultCandleWithClose(0));
+        ma.add(createDefaultCandleWithClose(2));
+        ma.add(createDefaultCandleWithClose(2));
+        assertEquals(0, new BigDecimal("1.33").compareTo(ma.get()));
+        ma.add(createDefaultCandleWithClose(2));
 
-        assertEquals(0, new BigDecimal("2").compareTo(ema.get()));
+        assertEquals(0, new BigDecimal("2").compareTo(ma.get()));
     }
 }

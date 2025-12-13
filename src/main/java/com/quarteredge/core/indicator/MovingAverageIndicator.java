@@ -2,6 +2,7 @@ package com.quarteredge.core.indicator;
 
 import com.quarteredge.core.model.CandleDTO;
 import com.quarteredge.core.util.FifoQueue;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -27,7 +28,7 @@ public class MovingAverageIndicator implements Indicator {
     private final FifoQueue<BigDecimal> dataQueue;
 
     /**
-     * The current calculated EMA value. Initialized to -1 to indicate insufficient data for
+     * The current calculated MA value. Initialized to -1 to indicate insufficient data for
      * calculation.
      */
     private BigDecimal val;
@@ -42,7 +43,7 @@ public class MovingAverageIndicator implements Indicator {
     private BigDecimal total;
 
     /**
-     * Constructs a new EMA indicator with the specified period length.
+     * Constructs a new MA indicator with the specified period length.
      *
      * @param length the number of periods to use for the moving average calculation
      */
