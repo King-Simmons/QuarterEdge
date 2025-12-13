@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
  *   <li>Ensuring proper handling of the rolling window when new data is added
  * </ul>
  *
- * @author Your Name
+ * @author King Simmons
  * @version 1.0
  * @since 0.2.0
  * @see AverageTrueRangeIndicator

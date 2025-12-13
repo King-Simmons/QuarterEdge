@@ -15,7 +15,7 @@ import java.math.RoundingMode;
  *
  * @author King Simmons
  * @version 1.0
- * @since 1.0
+ * @since 0.1.0
  * @see Indicator
  * @see CandleDTO
  */

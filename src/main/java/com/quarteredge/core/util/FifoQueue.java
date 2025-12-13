@@ -13,7 +13,7 @@ import java.util.ArrayDeque;
  * add, poll, and size operations.
  *
  * @param <E> the type of elements held in this collection
- * @author Your Name
+ * @author King Simmons
  * @version 1.0
  * @since 0.2.0
  */
