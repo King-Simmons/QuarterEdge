@@ -2,7 +2,6 @@ package com.quarteredge.core.indicator;
 
 import com.quarteredge.core.model.CandleDTO;
 import com.quarteredge.core.util.FifoQueue;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
