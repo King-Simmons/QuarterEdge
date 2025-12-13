@@ -14,18 +14,47 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The QuarterEdgeStrategy class implements the Strategy interface and is used to generate trading
+ * signals based on the Average True Range (ATR) and Defining Range (DR) indicators.
+ *
+ * <p>This strategy generates a trading signal when the ATR is greater than 0 and the Defining Range
+ * has been formed. The trading signal is generated based on the direction of the Defining Range.
+ *
+ * @author King Simmons
+ * @version 1.0
+ * @since v0.2.0
+ * @see Strategy
+ * @see AverageTrueRangeIndicator
+ * @see DefiningRangeIndicator
+ */
 public class QuarterEdgeStrategy implements Strategy {
+    /** Average True Range indicator. */
     private final AverageTrueRangeIndicator atrIndicator;
+
+    /** Defining Range indicator. */
     private final DefiningRangeIndicator drIndicator;
+
+    /** Flag indicating if an order has been created. */
     private boolean isOrderCreated;
 
-    public QuarterEdgeStrategy(int atrPeriod) {
+    /**
+     * Constructs a new QuarterEdgeStrategy with the specified ATR period.
+     *
+     * @param atrPeriod the period for the ATR indicator
+     */
+    public QuarterEdgeStrategy(final int atrPeriod) {
         this.atrIndicator = new AverageTrueRangeIndicator(atrPeriod);
         this.drIndicator = new DefiningRangeIndicator();
         this.isOrderCreated = false;
     }
 
-    public void push(CandleDTO data) {
+    /**
+     * Processes a new candlestick data point to update the indicators.
+     *
+     * @param data the candlestick data point to process
+     */
+    public void push(final CandleDTO data) {
         atrIndicator.add(data);
         drIndicator.add(data);
         if (data.time().isAfter(LAST_CANDLE_CLOSE_TIME)) {
@@ -33,6 +62,11 @@ public class QuarterEdgeStrategy implements Strategy {
         }
     }
 
+    /**
+     * Returns the current status of the strategy.
+     *
+     * @return the current status of the strategy
+     */
     public Optional<OrderDTO> getStatus() {
         if (isOrderCreated) {
             return Optional.empty();
@@ -49,6 +83,11 @@ public class QuarterEdgeStrategy implements Strategy {
         return order;
     }
 
+    /**
+     * Creates a new order based on the current state of the strategy.
+     *
+     * @return the new order
+     */
     private OrderDTO createOrder() {
         double atr = atrIndicator.get().doubleValue();
         double high = drIndicator.getDrHigh();

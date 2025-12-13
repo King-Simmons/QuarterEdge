@@ -99,8 +99,10 @@ public class DefiningRangeIndicator implements Indicator {
             definingRangeDTO = new DefiningRangeDTO(drHigh, drLow, idrHigh, idrLow);
         }
         if (definingRangeDTO != null) {
-            if (data.close() > drHigh || data.close() < drLow
-                    || data.open() > drHigh || data.open() < drLow) {
+            if (data.close() > drHigh
+                    || data.close() < drLow
+                    || data.open() > drHigh
+                    || data.open() < drLow) {
                 this.direction = data.close() > drHigh ? Direction.BUY : Direction.SELL;
                 this.breakoutHasOccurred = true;
             }

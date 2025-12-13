@@ -1,7 +1,7 @@
 package com.quarteredge.core.indicator;
 
 import static com.quarteredge.util.CommonUtils.generateTestSession;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import com.quarteredge.core.model.CandleDTO;
 import java.util.List;
@@ -23,7 +23,7 @@ public class DefiningRangeIndicatorTest {
 
     @Test
     void testGetInvalid() {
-        assertNull(drIndicator.get());
+        assertFalse(drIndicator.get());
     }
 
     @Test
