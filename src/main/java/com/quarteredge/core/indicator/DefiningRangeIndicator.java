@@ -5,6 +5,7 @@ import static com.quarteredge.core.util.Constants.RDR_SESSION_START_TIME;
 
 import com.quarteredge.core.model.CandleDTO;
 import com.quarteredge.core.model.DefiningRangeDTO;
+import com.quarteredge.core.model.Direction;
 
 /**
  * An indicator that tracks the defining range and implied defining range (IDR) during the Regular
@@ -46,6 +47,9 @@ public class DefiningRangeIndicator implements Indicator {
     /** The DTO containing the calculated defining range values. */
     private DefiningRangeDTO definingRangeDTO;
 
+    /** The direction of the defining range. */
+    private Direction direction;
+
     /**
      * Constructs a new DefiningRangeIndicator with initial values. The indicator starts in an
      * inactive state with all range values set to -1.
@@ -53,6 +57,7 @@ public class DefiningRangeIndicator implements Indicator {
     public DefiningRangeIndicator() {
         definingRangeDTO = null;
         breakoutHasOccurred = false;
+        direction = null;
     }
 
     /**
@@ -75,6 +80,7 @@ public class DefiningRangeIndicator implements Indicator {
         if (data.time().isBefore(RDR_SESSION_START_TIME)) {
             definingRangeDTO = null;
             breakoutHasOccurred = false;
+            direction = null;
             drHigh = -1;
             drLow = Double.MAX_VALUE;
             idrHigh = -1;
@@ -93,31 +99,56 @@ public class DefiningRangeIndicator implements Indicator {
             definingRangeDTO = new DefiningRangeDTO(drHigh, drLow, idrHigh, idrLow);
         }
         if (definingRangeDTO != null) {
-            if (data.close() > drHigh
-                    || data.close() < drLow
-                    || data.open() > drHigh
-                    || data.open() < drLow) {
+            if (data.close() > drHigh || data.close() < drLow
+                    || data.open() > drHigh || data.open() < drLow) {
+                this.direction = data.close() > drHigh ? Direction.BUY : Direction.SELL;
                 this.breakoutHasOccurred = true;
             }
         }
     }
 
     /**
-     * Returns the current state of the defining range calculations.
+     * Returns true if the defining range has been formed, false otherwise.
      *
-     * @return a {@link DefiningRangeDTO} containing the current DR and IDR values. If the session
-     *     is not yet complete, the DTO will be null
+     * @return true if the defining range has been formed, false otherwise
      */
-    public DefiningRangeDTO get() {
-        return definingRangeDTO;
+    public Boolean get() {
+        return definingRangeDTO != null;
     }
 
     /**
-     * Returns the breakout has occurred flag.
+     * Returns the flag defining if a breakout has occurred.
      *
      * @return true if a breakout has occurred, false otherwise
      */
     public boolean hasBreakoutOccurred() {
         return breakoutHasOccurred;
+    }
+
+    /**
+     * Returns the highest price observed during the RDR session.
+     *
+     * @return the highest price observed during the RDR session
+     */
+    public double getDrHigh() {
+        return drHigh;
+    }
+
+    /**
+     * Returns the lowest price observed during the RDR session.
+     *
+     * @return the lowest price observed during the RDR session
+     */
+    public double getDrLow() {
+        return drLow;
+    }
+
+    /**
+     * Returns the direction of the defining range.
+     *
+     * @return the direction of the defining range
+     */
+    public Direction getDirection() {
+        return direction;
     }
 }

@@ -57,4 +57,7 @@ public final class Constants {
 
     /** The increment value for the Quarter Level calculation. */
     public static final int QUARTER_LEVEL_INCREMENT = 25;
+
+    /** The increment value for the CL tick calculation. */
+    public static final double CL_TICK_INCREMENT = .01;
 }

@@ -17,7 +17,7 @@ public class CommonMethods {
      * @param increment the increment value.
      * @return the list of quarter levels.
      */
-    public List<Double> getQuarterLevelsInRange(
+    public static List<Double> getQuarterLevelsInRange(
             final double min, final double max, final double increment) {
         List<Double> levels = new ArrayList<>();
         BigDecimal newMin = new BigDecimal(min).setScale(2, RoundingMode.DOWN);
