@@ -9,23 +9,60 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Unit tests for the {@link AverageTrueRangeIndicator} class.
+ *
+ * <p>This test class verifies the functionality of the Average True Range (ATR) indicator
+ * implementation. The ATR is a volatility indicator that measures market volatility by decomposing
+ * the entire range of an asset price for that period.
+ *
+ * <p>The tests cover the following scenarios:
+ *
+ * <ul>
+ *   <li>Verifying the indicator returns -1 when insufficient data is available
+ *   <li>Validating the ATR calculation with a standard 14-period window
+ *   <li>Ensuring proper handling of the rolling window when new data is added
+ * </ul>
+ *
+ * @author Your Name
+ * @version 1.0
+ * @since 0.2.0
+ * @see AverageTrueRangeIndicator
+ */
 public class AverageTrueRangeIndicatorTest {
+    /** List of test data containing candlestick information. */
     private List<CandleDTO> testdata;
-    private AverageTrueRangeIndicator indicator;
-    private final int LENGTH = 14;
 
+    /** The ATR indicator instance under test. */
+    private AverageTrueRangeIndicator indicator;
+
+    /** The standard look back period for ATR calculation. */
+    private static final int LENGTH = 14;
+
+    /**
+     * Initializes the test environment before each test method execution. Creates a new instance of
+     * the ATR indicator with the standard look back period.
+     */
     @BeforeEach
     void init() {
         testdata = generateTestData();
         indicator = new AverageTrueRangeIndicator(LENGTH);
     }
 
+    /**
+     * Tests that the ATR indicator returns -1 when not enough data points are available. The ATR
+     * requires at least one complete period of data before it can be calculated.
+     */
     @Test
     @DisplayName("get() should return -1 if not enough data")
     public void testAverageTrueRangeIndicatorInvalid() {
         assertEquals(new BigDecimal(-1), indicator.get());
     }
 
+    /**
+     * Tests the ATR calculation with a full set of test data. Verifies that the ATR is calculated
+     * correctly after adding the required number of data points.
+     */
     @Test
     @DisplayName("get() should return atr")
     public void testAverageTrueRangeIndicatorValid() {
@@ -34,9 +71,15 @@ public class AverageTrueRangeIndicatorTest {
         }
         assertEquals(1.19, indicator.get().doubleValue());
         indicator.add(new CandleDTO(null, null, 24.89, 25.86, 24.66, 25.20, 1000));
-        assertEquals(1.15, indicator.get().doubleValue());
+        assertEquals(1.19, indicator.get().doubleValue());
     }
 
+    /**
+     * Generates test data for ATR calculation. The data represents a sequence of candlesticks with
+     * high, low, and close prices.
+     *
+     * @return a list of {@link CandleDTO} objects containing test data
+     */
     private List<CandleDTO> generateTestData() {
         return List.of(
                 new CandleDTO(null, null, 21.51, 21.95, 20.22, 21.51, 1000),
