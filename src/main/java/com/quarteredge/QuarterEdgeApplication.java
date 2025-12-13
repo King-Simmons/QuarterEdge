@@ -20,7 +20,8 @@ public class QuarterEdgeApplication {
     /** Application entry point. Prints "Hello World" to the standard output stream. */
     static void main() {
         System.out.println("Hello World");
-        var strategy = new MovingAverageCrossoverStrategy(FAST_EMA_PERIOD, SLOW_EMA_PERIOD, INCREMENT);
+        var strategy =
+                new MovingAverageCrossoverStrategy(FAST_EMA_PERIOD, SLOW_EMA_PERIOD, INCREMENT);
         BacktestService backtestService = new BacktestService(strategy, "data/CL_5min_sample.csv");
         backtestService.run();
     }

@@ -10,10 +10,9 @@ import java.util.Optional;
 /**
  * Moving Average Crossover Strategy implementation. (Example)
  *
- * <p>This sample strategy uses two Moving Averages to determine when to enter
- * and exit trades. It is based on the crossover of the faster moving average over
- * the slower moving average, indicating a
- * potential trend change.
+ * <p>This sample strategy uses two Moving Averages to determine when to enter and exit trades. It
+ * is based on the crossover of the faster moving average over the slower moving average, indicating
+ * a potential trend change.
  *
  * @author King Simmons
  * @version 1.0

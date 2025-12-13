@@ -23,21 +23,26 @@ import org.junit.jupiter.api.Test;
  * @see MovingAverageIndicator
  */
 public class MovingAverageIndicatorTest {
-    /** The {@link MovingAverageIndicatorTest} instance under test, configured with a period length of 3. */
+    /**
+     * The {@link MovingAverageIndicatorTest} instance under test, configured with a period length
+     * of 3.
+     */
     private MovingAverageIndicator ema;
 
     /** The period length for the {@link MovingAverageIndicator} under test. */
     private static final int PERIOD = 3;
 
-    /** Initializes a new {@link MovingAverageIndicator} with a period length of 3 before each test. */
+    /**
+     * Initializes a new {@link MovingAverageIndicator} with a period length of 3 before each test.
+     */
     @BeforeEach
     void init() {
         ema = new MovingAverageIndicator(PERIOD);
     }
 
     /**
-     * Verifies that {@link MovingAverageIndicator#get()} returns {@code -1} when fewer than the required
-     * number of data points have been added.
+     * Verifies that {@link MovingAverageIndicator#get()} returns {@code -1} when fewer than the
+     * required number of data points have been added.
      */
     @Test
     @DisplayName("get() should return -1 when not enough data")
