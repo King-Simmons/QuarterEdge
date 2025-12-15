@@ -1,5 +1,6 @@
 package com.quarteredge.core.indicator;
 
+import static com.quarteredge.core.util.Constants.LAST_CANDLE_CLOSE_TIME;
 import static com.quarteredge.core.util.Constants.RDR_SESSION_END_TIME;
 import static com.quarteredge.core.util.Constants.RDR_SESSION_START_TIME;
 
@@ -7,6 +8,7 @@ import com.quarteredge.core.model.CandleDTO;
 import com.quarteredge.core.model.DefiningRangeDTO;
 import com.quarteredge.core.model.Direction;
 
+import java.time.LocalTime;
 /**
  * An indicator that tracks the defining range and implied defining range (IDR) during the Regular
  * Trading Hours (RTH) session.
@@ -44,6 +46,9 @@ public class DefiningRangeIndicator implements Indicator {
     /** Flag indicating if a breakout has occurred. */
     private boolean breakoutHasOccurred;
 
+    /** The time of the breakout. */
+    private LocalTime breakoutTime;
+
     /** The DTO containing the calculated defining range values. */
     private DefiningRangeDTO definingRangeDTO;
 
@@ -57,6 +62,7 @@ public class DefiningRangeIndicator implements Indicator {
     public DefiningRangeIndicator() {
         definingRangeDTO = null;
         breakoutHasOccurred = false;
+        breakoutTime = null;
         direction = null;
     }
 
@@ -77,14 +83,17 @@ public class DefiningRangeIndicator implements Indicator {
      * @throws NullPointerException if the data parameter is null
      */
     public void add(final CandleDTO data) {
-        if (data.time().isBefore(RDR_SESSION_START_TIME)) {
+        if (data.time().isBefore(RDR_SESSION_START_TIME)
+                || data.time().isAfter(LAST_CANDLE_CLOSE_TIME)) {
             definingRangeDTO = null;
             breakoutHasOccurred = false;
+            breakoutTime = null;
             direction = null;
             drHigh = -1;
             drLow = Double.MAX_VALUE;
             idrHigh = -1;
             idrLow = Double.MAX_VALUE;
+            return;
         }
 
         if (data.time().isAfter(RDR_SESSION_START_TIME)
@@ -95,7 +104,7 @@ public class DefiningRangeIndicator implements Indicator {
             idrLow = Math.min(idrLow, data.close());
         }
 
-        if (data.time().equals(RDR_SESSION_END_TIME) || data.time().isAfter(RDR_SESSION_END_TIME)) {
+        if (data.time().equals(RDR_SESSION_END_TIME)) {
             definingRangeDTO = new DefiningRangeDTO(drHigh, drLow, idrHigh, idrLow);
         }
         if (definingRangeDTO != null) {
@@ -105,6 +114,7 @@ public class DefiningRangeIndicator implements Indicator {
                     || data.open() < drLow) {
                 this.direction = data.close() > drHigh ? Direction.BUY : Direction.SELL;
                 this.breakoutHasOccurred = true;
+                this.breakoutTime = data.time();
             }
         }
     }
@@ -125,6 +135,15 @@ public class DefiningRangeIndicator implements Indicator {
      */
     public boolean hasBreakoutOccurred() {
         return breakoutHasOccurred;
+    }
+
+    /**
+     * Returns the time of the breakout.
+     *
+     * @return the time of the breakout
+     */
+    public LocalTime getBreakoutTime() {
+        return breakoutTime;
     }
 
     /**

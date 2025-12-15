@@ -74,12 +74,12 @@ public class QuarterEdgeStrategy implements Strategy {
         if (!drIndicator.get() || !drIndicator.hasBreakoutOccurred()) {
             return Optional.empty();
         }
-        if (atrIndicator.get().doubleValue() > 0) {
+        if (atrIndicator.get().doubleValue() < 0) {
             return Optional.empty();
         }
 
-        Optional<OrderDTO> order = Optional.of(createOrder());
-        isOrderCreated = true;
+        Optional<OrderDTO> order = Optional.ofNullable(createOrder());
+        if (order.isPresent()) isOrderCreated = true;
         return order;
     }
 
@@ -93,10 +93,14 @@ public class QuarterEdgeStrategy implements Strategy {
         double high = drIndicator.getDrHigh();
         double low = drIndicator.getDrLow();
         Direction direction = drIndicator.getDirection();
-        List<Double> getQTLevels =
-                CommonMethods.getQuarterLevelsInRange(low, high, CL_TICK_INCREMENT);
-
-        BigDecimal entryPrice = new BigDecimal(getQTLevels.getFirst());
+        List<Double> qTLevels = CommonMethods.getQuarterLevelsInRange(low, high, CL_TICK_INCREMENT);
+        if (qTLevels.isEmpty()) {
+            return null;
+        }
+        BigDecimal entryPrice =
+                direction == Direction.BUY
+                        ? new BigDecimal(qTLevels.getLast())
+                        : new BigDecimal(qTLevels.getFirst());
         BigDecimal stopLoss =
                 direction == Direction.BUY
                         ? entryPrice.subtract(new BigDecimal(atr))

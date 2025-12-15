@@ -72,14 +72,14 @@ public class BacktestSession {
                 if (candle.time().equals(FIRST_CANDLE_OPEN_TIME)) {
                     continue;
                 }
+                updateOrders(candle);
                 Optional<OrderDTO> order = strategy.getStatus();
                 order.ifPresent(orders::add);
                 // log new order
                 order.ifPresent(IO::println);
-                updateOrders(candle);
             }
         } catch (Exception e) {
-            System.out.println("BacktestSession.start() - Exception: " + e.getMessage());
+            IO.println("BacktestSession.start() - Exception: " + e);
             this.status = SessionStatus.FAILED;
             return;
         }
@@ -111,8 +111,9 @@ public class BacktestSession {
                                 OrderStatus.ACTIVE);
                 // update order
                 orders.set(i, order);
+                IO.println(order);
+                continue;
             }
-
             // check if order can be closed
             if (canBeClosed(order, candle)) {
                 OrderStatus closeStatus = determineCloseStatus(order, candle);
@@ -184,7 +185,7 @@ public class BacktestSession {
      * @return true if the order can be opened, false otherwise
      */
     private boolean canBeOpened(final OrderDTO order, final CandleDTO candle) {
-        IO.println(candle.time());
+        IO.println(candle.time() + " " + candle.close());
         if (order.status() != OrderStatus.PENDING
                 || candle.time().equals(LAST_CANDLE_CLOSE_TIME)
                 || candle.time().equals(FIRST_CANDLE_OPEN_TIME)) {
@@ -203,12 +204,23 @@ public class BacktestSession {
      * @return true if the order can be closed, false otherwise
      */
     private boolean canBeClosed(final OrderDTO order, final CandleDTO candle) {
+        // order is in closed status
         if (order.status() != OrderStatus.ACTIVE && order.status() != OrderStatus.PENDING) {
             return false;
         }
+        // last candle
+        if (candle.time().equals(LAST_CANDLE_CLOSE_TIME)
+                || candle.time().isAfter(LAST_CANDLE_CLOSE_TIME)) {
+            return true;
+        }
+        // order is in pending status
+        if (order.status() != OrderStatus.ACTIVE) {
+            return false;
+        }
+        // order is in active status
         boolean isSLHit = order.SL() <= candle.high() && order.SL() >= candle.low();
         boolean isTPHit = order.TP() <= candle.high() && order.TP() >= candle.low();
-        return isSLHit || isTPHit || candle.time().equals(LAST_CANDLE_CLOSE_TIME);
+        return isSLHit || isTPHit;
     }
 
     /**
@@ -225,13 +237,13 @@ public class BacktestSession {
         }
         boolean isSLHit = order.SL() <= candle.high() && order.SL() >= candle.low();
         boolean isTPHit = order.TP() <= candle.high() && order.TP() >= candle.low();
-        if (isSLHit && isTPHit) {
+        if (isSLHit && isTPHit && order.status() == OrderStatus.ACTIVE) {
             return OrderStatus.CLOSED_UNKNOWN;
         }
-        if (isSLHit) {
+        if (isSLHit && order.status() == OrderStatus.ACTIVE) {
             return OrderStatus.CLOSED_SL_HIT;
         }
-        if (isTPHit) {
+        if (isTPHit && order.status() == OrderStatus.ACTIVE) {
             return OrderStatus.CLOSED_TP_HIT;
         }
 
