@@ -40,7 +40,7 @@ public final class Constants {
     public static final int VOLUME_INDEX = 6;
 
     /** The time of the last candle in a trading session. (DAY). */
-    public static final LocalTime LAST_CANDLE_CLOSE_TIME = LocalTime.of(16, 55, 0);
+    public static final LocalTime LAST_CANDLE_CLOSE_TIME = LocalTime.of(15, 55, 0);
 
     /** The time of the first candle in a trading session. (DAY). */
     public static final LocalTime FIRST_CANDLE_OPEN_TIME = LocalTime.of(18, 0, 0);
@@ -57,4 +57,7 @@ public final class Constants {
 
     /** The increment value for the Quarter Level calculation. */
     public static final int QUARTER_LEVEL_INCREMENT = 25;
+
+    /** The increment value for the CL tick calculation. */
+    public static final double CL_TICK_INCREMENT = .01;
 }
