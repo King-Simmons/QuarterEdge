@@ -8,7 +8,6 @@ import com.quarteredge.core.model.CandleDTO;
 import com.quarteredge.core.model.DefiningRangeDTO;
 import com.quarteredge.core.model.Direction;
 
-import java.time.LocalTime;
 /**
  * An indicator that tracks the defining range and implied defining range (IDR) during the Regular
  * Trading Hours (RTH) session.
@@ -46,9 +45,6 @@ public class DefiningRangeIndicator implements Indicator {
     /** Flag indicating if a breakout has occurred. */
     private boolean breakoutHasOccurred;
 
-    /** The time of the breakout. */
-    private LocalTime breakoutTime;
-
     /** The DTO containing the calculated defining range values. */
     private DefiningRangeDTO definingRangeDTO;
 
@@ -62,7 +58,6 @@ public class DefiningRangeIndicator implements Indicator {
     public DefiningRangeIndicator() {
         definingRangeDTO = null;
         breakoutHasOccurred = false;
-        breakoutTime = null;
         direction = null;
     }
 
@@ -87,7 +82,6 @@ public class DefiningRangeIndicator implements Indicator {
                 || data.time().isAfter(LAST_CANDLE_CLOSE_TIME)) {
             definingRangeDTO = null;
             breakoutHasOccurred = false;
-            breakoutTime = null;
             direction = null;
             drHigh = -1;
             drLow = Double.MAX_VALUE;
@@ -114,7 +108,6 @@ public class DefiningRangeIndicator implements Indicator {
                     || data.open() < drLow) {
                 this.direction = data.close() > drHigh ? Direction.BUY : Direction.SELL;
                 this.breakoutHasOccurred = true;
-                this.breakoutTime = data.time();
             }
         }
     }
@@ -135,15 +128,6 @@ public class DefiningRangeIndicator implements Indicator {
      */
     public boolean hasBreakoutOccurred() {
         return breakoutHasOccurred;
-    }
-
-    /**
-     * Returns the time of the breakout.
-     *
-     * @return the time of the breakout
-     */
-    public LocalTime getBreakoutTime() {
-        return breakoutTime;
     }
 
     /**

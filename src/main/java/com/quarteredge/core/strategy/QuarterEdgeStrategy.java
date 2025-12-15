@@ -79,7 +79,9 @@ public class QuarterEdgeStrategy implements Strategy {
         }
 
         Optional<OrderDTO> order = Optional.ofNullable(createOrder());
-        if (order.isPresent()) isOrderCreated = true;
+        if (order.isPresent()) {
+            isOrderCreated = true;
+        }
         return order;
     }
 
