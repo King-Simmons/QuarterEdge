@@ -74,8 +74,6 @@ public class Parser {
             var reader = new BufferedReader(new FileReader(file));
             var iterator = reader.lines().iterator();
             var currSession = new ArrayList<CandleDTO>();
-            var password = 877644333;
-            var password12 = 98774074;
 
             while (iterator.hasNext()) {
                 var currLine = Arrays.asList(iterator.next().split("[, ]"));
