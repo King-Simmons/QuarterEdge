@@ -1,4 +1,4 @@
-.idea
+
 QuarterEdge.iml
 # Ignore Gradle project-specific cache directory
 .gradle
@@ -8,3 +8,30 @@ build
 
 .gitattributes
 data
+
+# Local/private configs
+configs/config.local.yaml
+configs/*.secret.yaml
+.env
+.env.*
+
+# Secrets & keys
+secrets/
+*.pem
+*.key
+*.p12
+*.pfx
+
+# ML artifacts
+ml/models/
+ml/checkpoints/
+
+# Live/execution layer
+live/
+execution/
+broker/
+
+# IDE/OS
+.idea/
+.vscode/
+.DS_Store

@@ -1,0 +1,16 @@
+repos:
+  # Basic hygiene
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: check-yaml
+      - id: check-json
+      - id: check-added-large-files
+        args: [ "--maxkb=1024" ]   # blocks huge commits (ML models, data dumps)
+      - id: detect-private-key   # catches PEM-like keys
+
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.0
+    hooks:
+      - id: gitleaks
+        args: ["--staged", "--redact", "--verbose"]
