@@ -76,7 +76,7 @@ public class BacktestSession {
                 Optional<OrderDTO> order = strategy.getStatus();
                 order.ifPresent(orders::add);
                 // log new order
-                order.ifPresent(IO::println);
+                // order.ifPresent(IO::println);
             }
         } catch (Exception e) {
             IO.println("BacktestSession.start() - Exception: " + e);
@@ -111,7 +111,6 @@ public class BacktestSession {
                                 OrderStatus.ACTIVE);
                 // update order
                 orders.set(i, order);
-                IO.println(order);
                 continue;
             }
             // check if order can be closed
@@ -128,8 +127,7 @@ public class BacktestSession {
                                 order.startTime(),
                                 candle.time(),
                                 closeStatus);
-                // update order and log
-                System.out.println(order);
+                // update order
                 orders.set(i, order);
             }
         }
@@ -151,8 +149,6 @@ public class BacktestSession {
         } else if (closeStatus == OrderStatus.CLOSED_SL_HIT) {
             closePrice = order.SL();
         } else if (closeStatus == OrderStatus.CLOSED_MANUAL) {
-            closePrice = candle.close();
-        } else if (closeStatus == OrderStatus.CLOSED_CANCELED) {
             closePrice = candle.close();
         }
         return closePrice;
@@ -185,7 +181,6 @@ public class BacktestSession {
      * @return true if the order can be opened, false otherwise
      */
     private boolean canBeOpened(final OrderDTO order, final CandleDTO candle) {
-        IO.println(candle.time() + " " + candle.close());
         if (order.status() != OrderStatus.PENDING
                 || candle.time().equals(LAST_CANDLE_CLOSE_TIME)
                 || candle.time().equals(FIRST_CANDLE_OPEN_TIME)) {

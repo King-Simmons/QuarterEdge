@@ -60,4 +60,16 @@ public final class Constants {
 
     /** The increment value for the CL tick calculation. */
     public static final double CL_TICK_INCREMENT = .01;
+
+    /** The index positions for accessing wins in the wins and losses array. */
+    public static final int WIN_IDX = 0;
+
+    /** The index positions for accessing losses in the wins and losses array. */
+    public static final int LOSS_IDX = 1;
+
+    /** The index positions for accessing winSum in the wins and losses array. */
+    public static final int WIN_SUM_IDX = 2;
+
+    /** The index positions for accessing lossSum in the wins and losses array. */
+    public static final int LOSS_SUM_IDX = 3;
 }
