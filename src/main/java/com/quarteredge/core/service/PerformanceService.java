@@ -50,8 +50,8 @@ public class PerformanceService {
                         Wins: %.0f
                         Losses: %.0f
                         Win Rate: %.2f%%
-                        Avg Win R: %f
-                        Avg Loss R: %f
+                        Avg Win R: %.2f
+                        Avg Loss R: %.2f
                         Expectancy: %.2f
                         """,
                         wins, losses, winRate, winAverage, lossAverage, expectancy));
