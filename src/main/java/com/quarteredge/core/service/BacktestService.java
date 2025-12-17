@@ -1,9 +1,12 @@
 package com.quarteredge.core.service;
 
 import com.quarteredge.core.component.BacktestSession;
+import com.quarteredge.core.model.OrderDTO;
 import com.quarteredge.core.strategy.Strategy;
 import com.quarteredge.core.util.Parser;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /** Service class for running backtests. */
 public class BacktestService {
@@ -12,6 +15,9 @@ public class BacktestService {
 
     /** The strategy to be used for the backtest. */
     private final Strategy strategy;
+
+    /** The list of orders to be used for the backtest. */
+    private final List<OrderDTO> orders;
 
     /**
      * Constructor for the BacktestService class.
@@ -22,6 +28,7 @@ public class BacktestService {
     public BacktestService(final Strategy strategy, final String filePath) {
         this.strategy = strategy;
         this.parser = new Parser(new File(filePath));
+        this.orders = new ArrayList<>();
     }
 
     /** Runs the backtest. */
@@ -32,10 +39,11 @@ public class BacktestService {
                         (key, value) -> {
                             IO.println(key);
                             var backTestSession = new BacktestSession(strategy, value);
-                            IO.println(backTestSession.getStatus());
                             backTestSession.startSession();
-                            IO.println(backTestSession.getStatus());
                             backTestSession.getOrders().forEach(IO::println);
+                            orders.addAll(backTestSession.getOrders());
                         });
+        PerformanceService performanceService = new PerformanceService(orders);
+        performanceService.calculatePerformance();
     }
 }
