@@ -32,8 +32,15 @@ public class PerformanceService {
         this.orders = orders;
     }
 
-    /** Calculates the performance metrics of the backtesting session. */
-    public void calculatePerformance() {
+    /**
+     * Calculates the performance metrics of the backtesting session.
+     *
+     * @return the performance metrics of the backtesting session
+     */
+    public String calculatePerformance() {
+        if (orders.isEmpty()) {
+            return "No orders to calculate performance metrics.";
+        }
         var winsAndLosses = getWinsAndLosses();
         var wins = winsAndLosses[WIN_IDX];
         var losses = winsAndLosses[LOSS_IDX];
@@ -44,17 +51,16 @@ public class PerformanceService {
         var lossAverage = lossSum / losses;
         var expectancy = getExpectancy(wins, losses, winSum, lossSum);
 
-        IO.println(
-                String.format(
-                        """
-                        Wins: %.0f
-                        Losses: %.0f
-                        Win Rate: %.2f%%
-                        Avg Win R: %.2f
-                        Avg Loss R: %.2f
-                        Expectancy: %.2f
-                        """,
-                        wins, losses, winRate, winAverage, lossAverage, expectancy));
+        return String.format(
+                """
+                Wins: %.0f
+                Losses: %.0f
+                Win Rate: %.2f%%
+                Avg Win R: %.2f
+                Avg Loss R: %.2f
+                Expectancy: %.2f
+                """,
+                wins, losses, winRate, winAverage, lossAverage, expectancy);
     }
 
     /**

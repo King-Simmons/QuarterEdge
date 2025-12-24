@@ -44,6 +44,6 @@ public class BacktestService {
                             orders.addAll(backTestSession.getOrders());
                         });
         PerformanceService performanceService = new PerformanceService(orders);
-        performanceService.calculatePerformance();
+        IO.println(performanceService.calculatePerformance());
     }
 }
