@@ -13,7 +13,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class PerformanceServiceTest {
-    PerformanceService performanceService;
+    /** The performance service to be tested. */
+    private PerformanceService performanceService;
 
     @DisplayName("calculatePerformance() should not do run calculations if no orders in list")
     @Test
