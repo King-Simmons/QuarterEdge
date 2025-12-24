@@ -34,6 +34,10 @@ public class PerformanceService {
 
     /** Calculates the performance metrics of the backtesting session. */
     public void calculatePerformance() {
+        if (orders.isEmpty()) {
+            IO.println("No orders to calculate performance metrics.");
+            return;
+        }
         var winsAndLosses = getWinsAndLosses();
         var wins = winsAndLosses[WIN_IDX];
         var losses = winsAndLosses[LOSS_IDX];
