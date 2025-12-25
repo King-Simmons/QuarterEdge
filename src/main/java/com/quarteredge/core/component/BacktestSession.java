@@ -108,7 +108,8 @@ public class BacktestSession {
                                 order.direction(),
                                 candle.time(),
                                 order.closeTime(),
-                                OrderStatus.ACTIVE);
+                                OrderStatus.ACTIVE,
+                                order.orderStatsDTO());
                 // update order
                 orders.set(i, order);
                 continue;
@@ -126,7 +127,8 @@ public class BacktestSession {
                                 order.direction(),
                                 order.startTime(),
                                 candle.time(),
-                                closeStatus);
+                                closeStatus,
+                                order.orderStatsDTO());
                 // update order
                 orders.set(i, order);
             }

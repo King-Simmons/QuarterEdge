@@ -116,7 +116,8 @@ public class BacktestSessionTest {
                                 Direction.BUY,
                                 testLocalTime2,
                                 null,
-                                OrderStatus.ACTIVE));
+                                OrderStatus.ACTIVE,
+                                null));
         mockedBacktestSession.startSession();
         OrderDTO updatedOrder = mockedBacktestSession.getOrders().getFirst();
         assertEquals(OrderStatus.CLOSED_TP_HIT, updatedOrder.status());
@@ -139,7 +140,8 @@ public class BacktestSessionTest {
                                 Direction.SELL,
                                 testLocalTime2,
                                 null,
-                                OrderStatus.ACTIVE));
+                                OrderStatus.ACTIVE,
+                                null));
         mockedBacktestSession.startSession();
         OrderDTO updatedOrder = mockedBacktestSession.getOrders().getFirst();
         assertEquals(OrderStatus.CLOSED_SL_HIT, updatedOrder.status());
@@ -163,7 +165,8 @@ public class BacktestSessionTest {
                                 Direction.BUY,
                                 testLocalTime2,
                                 null,
-                                OrderStatus.ACTIVE));
+                                OrderStatus.ACTIVE,
+                                null));
         mockedBacktestSession
                 .getOrders()
                 .add(
@@ -175,7 +178,8 @@ public class BacktestSessionTest {
                                 Direction.BUY,
                                 null,
                                 null,
-                                OrderStatus.PENDING));
+                                OrderStatus.PENDING,
+                                null));
 
         mockedBacktestSession.startSession();
         OrderDTO updatedOrder = mockedBacktestSession.getOrders().get(0);
@@ -201,7 +205,8 @@ public class BacktestSessionTest {
                                 Direction.BUY,
                                 testLocalTime1,
                                 null,
-                                OrderStatus.ACTIVE));
+                                OrderStatus.ACTIVE,
+                                null));
         mockedBacktestSession.startSession();
         OrderDTO updatedOrder = mockedBacktestSession.getOrders().getFirst();
         assertEquals(OrderStatus.CLOSED_UNKNOWN, updatedOrder.status());
