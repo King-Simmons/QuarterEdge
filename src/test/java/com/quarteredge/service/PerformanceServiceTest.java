@@ -38,7 +38,8 @@ public class PerformanceServiceTest {
                                         Direction.BUY,
                                         LocalTime.of(12, 0, 0),
                                         LocalTime.of(12, 0, 0),
-                                        OrderStatus.CLOSED_TP_HIT)));
+                                        OrderStatus.CLOSED_TP_HIT,
+                                        null)));
         performanceService.calculatePerformance();
         var res = performanceService.calculatePerformance();
         assertNotEquals("No orders to calculate performance metrics.", res);

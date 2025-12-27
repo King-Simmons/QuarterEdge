@@ -10,4 +10,5 @@ public record OrderDTO(
         Direction direction,
         LocalTime startTime,
         LocalTime closeTime,
-        OrderStatus status) {}
+        OrderStatus status,
+        OrderStatsDTO orderStatsDTO) {}

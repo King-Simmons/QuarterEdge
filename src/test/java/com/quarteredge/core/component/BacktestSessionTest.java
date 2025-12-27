@@ -14,6 +14,7 @@ import static org.mockito.Mockito.when;
 import com.quarteredge.core.model.CandleDTO;
 import com.quarteredge.core.model.Direction;
 import com.quarteredge.core.model.OrderDTO;
+import com.quarteredge.core.model.OrderStatsDTO;
 import com.quarteredge.core.model.OrderStatus;
 import com.quarteredge.core.model.SessionStatus;
 import com.quarteredge.core.strategy.Strategy;
@@ -116,7 +117,8 @@ public class BacktestSessionTest {
                                 Direction.BUY,
                                 testLocalTime2,
                                 null,
-                                OrderStatus.ACTIVE));
+                                OrderStatus.ACTIVE,
+                                new OrderStatsDTO(1.5, 1.5)));
         mockedBacktestSession.startSession();
         OrderDTO updatedOrder = mockedBacktestSession.getOrders().getFirst();
         assertEquals(OrderStatus.CLOSED_TP_HIT, updatedOrder.status());
@@ -139,7 +141,8 @@ public class BacktestSessionTest {
                                 Direction.SELL,
                                 testLocalTime2,
                                 null,
-                                OrderStatus.ACTIVE));
+                                OrderStatus.ACTIVE,
+                                new OrderStatsDTO(1.5, 1.5)));
         mockedBacktestSession.startSession();
         OrderDTO updatedOrder = mockedBacktestSession.getOrders().getFirst();
         assertEquals(OrderStatus.CLOSED_SL_HIT, updatedOrder.status());
@@ -163,7 +166,8 @@ public class BacktestSessionTest {
                                 Direction.BUY,
                                 testLocalTime2,
                                 null,
-                                OrderStatus.ACTIVE));
+                                OrderStatus.ACTIVE,
+                                new OrderStatsDTO(150.5, 150.5)));
         mockedBacktestSession
                 .getOrders()
                 .add(
@@ -175,7 +179,8 @@ public class BacktestSessionTest {
                                 Direction.BUY,
                                 null,
                                 null,
-                                OrderStatus.PENDING));
+                                OrderStatus.PENDING,
+                                new OrderStatsDTO(150.5, 150.5)));
 
         mockedBacktestSession.startSession();
         OrderDTO updatedOrder = mockedBacktestSession.getOrders().get(0);
@@ -201,7 +206,8 @@ public class BacktestSessionTest {
                                 Direction.BUY,
                                 testLocalTime1,
                                 null,
-                                OrderStatus.ACTIVE));
+                                OrderStatus.ACTIVE,
+                                new OrderStatsDTO(100.5, 100.5)));
         mockedBacktestSession.startSession();
         OrderDTO updatedOrder = mockedBacktestSession.getOrders().getFirst();
         assertEquals(OrderStatus.CLOSED_UNKNOWN, updatedOrder.status());
