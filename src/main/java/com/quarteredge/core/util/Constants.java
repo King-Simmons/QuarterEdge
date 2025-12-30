@@ -72,4 +72,19 @@ public final class Constants {
 
     /** The index positions for accessing lossSum in the wins and losses array. */
     public static final int LOSS_SUM_IDX = 3;
+
+    /** The index positions for accessing mfeSum in the wins and losses array. */
+    public static final int MFE_SUM_IDX = 4;
+
+    /** The index positions for accessing madSum in the wins and losses array. */
+    public static final int MAE_SUM_IDX = 5;
+
+    /** The starting balance for performance metrics. */
+    public static final double STARTING_BALANCE = 10000.0;
+
+    /** The Risk per Trade Percentage for performance metrics. */
+    public static final double RISK_PER_TRADE = 0.01;
+
+    /** The total number of trading days in a calendar year. */
+    public static final int TRADING_DAYS = 252;
 }

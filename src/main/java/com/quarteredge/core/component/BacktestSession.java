@@ -4,6 +4,7 @@ import static com.quarteredge.core.util.Constants.FIRST_CANDLE_OPEN_TIME;
 import static com.quarteredge.core.util.Constants.LAST_CANDLE_CLOSE_TIME;
 
 import com.quarteredge.core.model.CandleDTO;
+import com.quarteredge.core.model.Direction;
 import com.quarteredge.core.model.OrderDTO;
 import com.quarteredge.core.model.OrderStatus;
 import com.quarteredge.core.model.SessionStatus;
@@ -108,10 +109,15 @@ public class BacktestSession {
                                 order.direction(),
                                 candle.time(),
                                 order.closeTime(),
-                                OrderStatus.ACTIVE);
+                                OrderStatus.ACTIVE,
+                                order.orderStatsDTO());
                 // update order
                 orders.set(i, order);
                 continue;
+            }
+            // if active, update order statistics
+            if (order.status() == OrderStatus.ACTIVE) {
+                updateOrderStatistics(order, candle);
             }
             // check if order can be closed
             if (canBeClosed(order, candle)) {
@@ -126,7 +132,8 @@ public class BacktestSession {
                                 order.direction(),
                                 order.startTime(),
                                 candle.time(),
-                                closeStatus);
+                                closeStatus,
+                                order.orderStatsDTO());
                 // update order
                 orders.set(i, order);
             }
@@ -245,5 +252,23 @@ public class BacktestSession {
         return order.status() == OrderStatus.ACTIVE
                 ? OrderStatus.CLOSED_MANUAL
                 : OrderStatus.CLOSED_CANCELED;
+    }
+
+    /**
+     * Updates the statistics of an order based on the current candlestick data.
+     *
+     * @param order the order to update
+     * @param candle the current candlestick data point
+     */
+    private void updateOrderStatistics(final OrderDTO order, final CandleDTO candle) {
+        double currMFP = order.orderStatsDTO().getMaximumFavorablePrice();
+        double currMAP = order.orderStatsDTO().getMaximumAdversePrice();
+        if (order.direction() == Direction.BUY) {
+            order.orderStatsDTO().setMaximumFavorablePrice(Math.max(currMFP, candle.high()));
+            order.orderStatsDTO().setMaximumAdversePrice(Math.min(currMAP, candle.low()));
+        } else {
+            order.orderStatsDTO().setMaximumFavorablePrice(Math.min(currMFP, candle.low()));
+            order.orderStatsDTO().setMaximumAdversePrice(Math.max(currMAP, candle.high()));
+        }
     }
 }

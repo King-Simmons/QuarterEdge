@@ -4,6 +4,7 @@ import com.quarteredge.core.indicator.MovingAverageIndicator;
 import com.quarteredge.core.model.CandleDTO;
 import com.quarteredge.core.model.Direction;
 import com.quarteredge.core.model.OrderDTO;
+import com.quarteredge.core.model.OrderStatsDTO;
 import com.quarteredge.core.model.OrderStatus;
 import java.util.Optional;
 
@@ -151,6 +152,7 @@ public class MovingAverageCrossoverStrategy implements Strategy {
                 direction,
                 currentCandle.time(),
                 null,
-                OrderStatus.ACTIVE);
+                OrderStatus.ACTIVE,
+                new OrderStatsDTO(entryPrice, entryPrice));
     }
 }

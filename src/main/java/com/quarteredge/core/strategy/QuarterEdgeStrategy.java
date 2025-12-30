@@ -8,6 +8,7 @@ import com.quarteredge.core.indicator.DefiningRangeIndicator;
 import com.quarteredge.core.model.CandleDTO;
 import com.quarteredge.core.model.Direction;
 import com.quarteredge.core.model.OrderDTO;
+import com.quarteredge.core.model.OrderStatsDTO;
 import com.quarteredge.core.model.OrderStatus;
 import com.quarteredge.core.util.CommonMethods;
 import java.math.BigDecimal;
@@ -119,6 +120,7 @@ public class QuarterEdgeStrategy implements Strategy {
                 direction,
                 null,
                 null,
-                OrderStatus.PENDING);
+                OrderStatus.PENDING,
+                new OrderStatsDTO(entryPrice.doubleValue(), entryPrice.doubleValue()));
     }
 }
