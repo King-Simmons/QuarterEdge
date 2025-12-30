@@ -6,12 +6,14 @@ import static com.quarteredge.core.util.Constants.MAE_SUM_IDX;
 import static com.quarteredge.core.util.Constants.MFE_SUM_IDX;
 import static com.quarteredge.core.util.Constants.RISK_PER_TRADE;
 import static com.quarteredge.core.util.Constants.STARTING_BALANCE;
+import static com.quarteredge.core.util.Constants.TRADING_DAYS;
 import static com.quarteredge.core.util.Constants.WIN_IDX;
 import static com.quarteredge.core.util.Constants.WIN_SUM_IDX;
 
 import com.quarteredge.core.model.Direction;
 import com.quarteredge.core.model.OrderDTO;
 import com.quarteredge.core.model.OrderStatus;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -77,6 +79,7 @@ public class PerformanceService {
         var maxWinStreak = streaks[0];
         var maxLossStreak = streaks[1];
         var maxDD = getMaxDrawdown();
+        var sharpeRatio = getSharpRatio();
 
         return String.format(
                 """
@@ -90,6 +93,7 @@ public class PerformanceService {
                 Max Win Streak :  %d
                 Max Loss Streak : %d
                 Max DrawDown : %.2f
+                Sharpe Ratio: %.2f
                 Expectancy: %.2f
                 """,
                 wins,
@@ -102,6 +106,7 @@ public class PerformanceService {
                 maxWinStreak,
                 maxLossStreak,
                 maxDD,
+                sharpeRatio,
                 expectancy);
     }
 
@@ -294,5 +299,52 @@ public class PerformanceService {
         }
 
         return maxDD;
+    }
+
+    /**
+     * Calculates the Sharpe Ratio for the backtesting session based on the daily returns of trading
+     * sessions. The Sharpe Ratio is a measure of risk-adjusted return, comparing the return of an
+     * investment to its risk. It is calculated as the average daily return divided by the standard
+     * deviation of daily returns, adjusted for the annualization factor.
+     *
+     * @return the calculated Sharpe Ratio as a double value
+     */
+    private double getSharpRatio() {
+        var sharpeRatio = 0.0;
+        var currEquity = STARTING_BALANCE;
+        var dailyReturns = new ArrayList<Double>();
+        for (List<OrderDTO> session : sessions) {
+            var returns = 0.0;
+            for (OrderDTO order : session) {
+                if (order.status() == OrderStatus.CLOSED_CANCELED) {
+                    continue;
+                }
+                var res =
+                        order.direction() == Direction.BUY
+                                ? order.closePrice() - order.entry()
+                                : order.entry() - order.closePrice();
+                var risk =
+                        order.direction() == Direction.BUY
+                                ? order.entry() - order.SL()
+                                : order.SL() - order.entry();
+                var r = res / risk;
+
+                returns = (r * RISK_PER_TRADE);
+                currEquity += r * (currEquity * RISK_PER_TRADE);
+            }
+            dailyReturns.add(returns);
+        }
+        var averageDailyReturn =
+                dailyReturns.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+        var excessDailyReturns =
+                dailyReturns.stream()
+                        .mapToDouble(Double::doubleValue)
+                        .map(k -> Math.pow(k - averageDailyReturn, 2));
+        var sumOfExcess = excessDailyReturns.sum();
+        var divideOfExcess = sumOfExcess / (dailyReturns.size() - 1);
+        var dailyStdDev = Math.sqrt(divideOfExcess);
+        sharpeRatio = (averageDailyReturn / dailyStdDev) * Math.sqrt(TRADING_DAYS);
+
+        return sharpeRatio;
     }
 }

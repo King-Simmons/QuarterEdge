@@ -84,4 +84,7 @@ public final class Constants {
 
     /** The Risk per Trade Percentage for performance metrics. */
     public static final double RISK_PER_TRADE = 0.01;
+
+    /** The total number of trading days in a calendar year. */
+    public static final int TRADING_DAYS = 252;
 }
