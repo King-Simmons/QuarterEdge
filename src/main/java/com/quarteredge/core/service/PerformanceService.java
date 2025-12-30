@@ -2,6 +2,8 @@ package com.quarteredge.core.service;
 
 import static com.quarteredge.core.util.Constants.LOSS_IDX;
 import static com.quarteredge.core.util.Constants.LOSS_SUM_IDX;
+import static com.quarteredge.core.util.Constants.MAE_SUM_IDX;
+import static com.quarteredge.core.util.Constants.MFE_SUM_IDX;
 import static com.quarteredge.core.util.Constants.WIN_IDX;
 import static com.quarteredge.core.util.Constants.WIN_SUM_IDX;
 
@@ -47,6 +49,10 @@ public class PerformanceService {
         var winRate = getWinRate(wins, losses);
         var winSum = winsAndLosses[WIN_SUM_IDX];
         var lossSum = winsAndLosses[LOSS_SUM_IDX];
+        var mfeSum = winsAndLosses[MFE_SUM_IDX];
+        var maeSum = winsAndLosses[MAE_SUM_IDX];
+        var mfeAverage = mfeSum / (wins + losses);
+        var maeAverage = maeSum / (wins + losses);
         var winAverage = winSum / wins;
         var lossAverage = lossSum / losses;
         var expectancy = getExpectancy(wins, losses, winSum, lossSum);
@@ -58,9 +64,11 @@ public class PerformanceService {
                 Win Rate: %.2f%%
                 Avg Win R: %.2f
                 Avg Loss R: %.2f
+                Avg MFE: %.2f
+                Avg MAE: %.2f
                 Expectancy: %.2f
                 """,
-                wins, losses, winRate, winAverage, lossAverage, expectancy);
+                wins, losses, winRate, winAverage, lossAverage, mfeAverage, maeAverage, expectancy);
     }
 
     /**
@@ -73,6 +81,9 @@ public class PerformanceService {
         var losses = 0;
         double winRSum = 0;
         double lossRSum = 0;
+        double mfeSum = 0;
+        double maeSum = 0;
+
         for (OrderDTO order : orders) {
             if (order.status() == OrderStatus.CLOSED_CANCELED) {
                 continue;
@@ -81,11 +92,31 @@ public class PerformanceService {
                     order.direction() == Direction.BUY
                             ? order.closePrice() - order.entry()
                             : order.entry() - order.closePrice();
+            var mfe =
+                    order.direction() == Direction.BUY
+                            ? Math.min(order.orderStatsDTO().getMaximumFavorablePrice(), order.TP())
+                                    - order.entry()
+                            : order.entry()
+                                    - Math.max(
+                                            order.orderStatsDTO().getMaximumFavorablePrice(),
+                                            order.TP());
+
+            var mae =
+                    order.direction() == Direction.BUY
+                            ? Math.max(order.orderStatsDTO().getMaximumAdversePrice(), order.SL())
+                                    - order.entry()
+                            : order.entry()
+                                    - Math.min(
+                                            order.orderStatsDTO().getMaximumAdversePrice(),
+                                            order.SL());
             var risk =
                     order.direction() == Direction.BUY
                             ? order.entry() - order.SL()
                             : order.SL() - order.entry();
             var r = res / risk;
+
+            mfeSum += mfe;
+            maeSum += mae;
 
             if (res > 0) {
                 wins++;
@@ -95,7 +126,7 @@ public class PerformanceService {
                 lossRSum += r;
             }
         }
-        return new double[] {wins, losses, winRSum, lossRSum};
+        return new double[] {wins, losses, winRSum, lossRSum, mfeSum, maeSum};
     }
 
     /**

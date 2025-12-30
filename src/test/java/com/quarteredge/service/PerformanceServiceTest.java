@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import com.quarteredge.core.model.Direction;
 import com.quarteredge.core.model.OrderDTO;
+import com.quarteredge.core.model.OrderStatsDTO;
 import com.quarteredge.core.model.OrderStatus;
 import com.quarteredge.core.service.PerformanceService;
 import java.time.LocalTime;
@@ -39,7 +40,7 @@ public class PerformanceServiceTest {
                                         LocalTime.of(12, 0, 0),
                                         LocalTime.of(12, 0, 0),
                                         OrderStatus.CLOSED_TP_HIT,
-                                        null)));
+                                        new OrderStatsDTO(0, 0))));
         performanceService.calculatePerformance();
         var res = performanceService.calculatePerformance();
         assertNotEquals("No orders to calculate performance metrics.", res);

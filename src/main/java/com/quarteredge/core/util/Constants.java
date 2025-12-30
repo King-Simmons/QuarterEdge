@@ -72,4 +72,10 @@ public final class Constants {
 
     /** The index positions for accessing lossSum in the wins and losses array. */
     public static final int LOSS_SUM_IDX = 3;
+
+    /** The index positions for accessing mfeSum in the wins and losses array. */
+    public static final int MFE_SUM_IDX = 4;
+
+    /** The index positions for accessing madSum in the wins and losses array. */
+    public static final int MAE_SUM_IDX = 5;
 }
