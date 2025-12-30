@@ -276,28 +276,13 @@ public class PerformanceService {
         var maxDD = 0.0;
         var peak = STARTING_BALANCE;
         var currEquity = STARTING_BALANCE;
+        var dailyReturns = getDailyReturns();
 
-        for (List<OrderDTO> session : sessions) {
-            for (OrderDTO order : session) {
-                if (order.status() == OrderStatus.CLOSED_CANCELED) {
-                    continue;
-                }
-                var res =
-                        order.direction() == Direction.BUY
-                                ? order.closePrice() - order.entry()
-                                : order.entry() - order.closePrice();
-                var risk =
-                        order.direction() == Direction.BUY
-                                ? order.entry() - order.SL()
-                                : order.SL() - order.entry();
-                var r = res / risk;
-
-                currEquity += r * (currEquity * RISK_PER_TRADE);
-                peak = Math.max(peak, currEquity);
-                maxDD = Math.max((peak - currEquity), maxDD);
-            }
+        for (double dailyReturn : dailyReturns) {
+            currEquity += currEquity * dailyReturn;
+            peak = Math.max(peak, currEquity);
+            maxDD = Math.max((peak - currEquity), maxDD);
         }
-
         return maxDD;
     }
 
@@ -311,6 +296,22 @@ public class PerformanceService {
      */
     private double getSharpRatio() {
         var sharpeRatio = 0.0;
+        var dailyReturns = getDailyReturns();
+        var averageDailyReturn =
+                dailyReturns.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+        var excessDailyReturns =
+                dailyReturns.stream()
+                        .mapToDouble(Double::doubleValue)
+                        .map(k -> Math.pow(k - averageDailyReturn, 2));
+        var sumOfExcess = excessDailyReturns.sum();
+        var divideOfExcess = sumOfExcess / (dailyReturns.size() - 1);
+        var dailyStdDev = Math.sqrt(divideOfExcess);
+        sharpeRatio = (averageDailyReturn / dailyStdDev) * Math.sqrt(TRADING_DAYS);
+
+        return sharpeRatio;
+    }
+
+    private ArrayList<Double> getDailyReturns() {
         var dailyReturns = new ArrayList<Double>();
         for (List<OrderDTO> session : sessions) {
             var returns = 0.0;
@@ -332,17 +333,6 @@ public class PerformanceService {
             }
             dailyReturns.add(returns);
         }
-        var averageDailyReturn =
-                dailyReturns.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
-        var excessDailyReturns =
-                dailyReturns.stream()
-                        .mapToDouble(Double::doubleValue)
-                        .map(k -> Math.pow(k - averageDailyReturn, 2));
-        var sumOfExcess = excessDailyReturns.sum();
-        var divideOfExcess = sumOfExcess / (dailyReturns.size() - 1);
-        var dailyStdDev = Math.sqrt(divideOfExcess);
-        sharpeRatio = (averageDailyReturn / dailyStdDev) * Math.sqrt(TRADING_DAYS);
-
-        return sharpeRatio;
+        return dailyReturns;
     }
 }
