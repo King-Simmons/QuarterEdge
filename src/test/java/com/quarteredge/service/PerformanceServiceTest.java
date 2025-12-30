@@ -22,7 +22,7 @@ public class PerformanceServiceTest {
     void calculatePerformanceNoOrders() {
         performanceService = new PerformanceService(List.of());
         var result = performanceService.calculatePerformance();
-        assertEquals("No orders to calculate performance metrics.", result);
+        assertEquals("No sessions to calculate performance metrics.", result);
     }
 
     @DisplayName("calculatePerformance() should run calculations if orders in list")
@@ -31,18 +31,19 @@ public class PerformanceServiceTest {
         performanceService =
                 new PerformanceService(
                         List.of(
-                                new OrderDTO(
-                                        1,
-                                        2,
-                                        1.5,
-                                        2,
-                                        Direction.BUY,
-                                        LocalTime.of(12, 0, 0),
-                                        LocalTime.of(12, 0, 0),
-                                        OrderStatus.CLOSED_TP_HIT,
-                                        new OrderStatsDTO(0, 0))));
+                                List.of(
+                                        new OrderDTO(
+                                                1,
+                                                2,
+                                                1.5,
+                                                2,
+                                                Direction.BUY,
+                                                LocalTime.of(12, 0, 0),
+                                                LocalTime.of(12, 0, 0),
+                                                OrderStatus.CLOSED_TP_HIT,
+                                                new OrderStatsDTO(0, 0)))));
         performanceService.calculatePerformance();
         var res = performanceService.calculatePerformance();
-        assertNotEquals("No orders to calculate performance metrics.", res);
+        assertNotEquals("No sessions to calculate performance metrics.", res);
     }
 }

@@ -17,7 +17,7 @@ public class BacktestService {
     private final Strategy strategy;
 
     /** The list of orders to be used for the backtest. */
-    private final List<OrderDTO> orders;
+    private final List<List<OrderDTO>> sessions;
 
     /**
      * Constructor for the BacktestService class.
@@ -28,7 +28,7 @@ public class BacktestService {
     public BacktestService(final Strategy strategy, final String filePath) {
         this.strategy = strategy;
         this.parser = new Parser(new File(filePath));
-        this.orders = new ArrayList<>();
+        this.sessions = new ArrayList<>();
     }
 
     /** Runs the backtest. */
@@ -41,9 +41,9 @@ public class BacktestService {
                             var backTestSession = new BacktestSession(strategy, value);
                             backTestSession.startSession();
                             backTestSession.getOrders().forEach(IO::println);
-                            orders.addAll(backTestSession.getOrders());
+                            sessions.add(backTestSession.getOrders());
                         });
-        PerformanceService performanceService = new PerformanceService(orders);
+        PerformanceService performanceService = new PerformanceService(sessions);
         IO.println(performanceService.calculatePerformance());
     }
 }

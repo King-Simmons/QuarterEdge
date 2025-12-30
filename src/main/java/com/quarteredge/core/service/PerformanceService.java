@@ -22,16 +22,19 @@ import java.util.List;
  * @since 0.3.0
  */
 public class PerformanceService {
-    /** The list of orders to calculate performance metrics for. */
-    private final List<OrderDTO> orders;
+    /**
+     * The list of sessions that contains orders for each session to calculate performance metrics
+     * for.
+     */
+    private final List<List<OrderDTO>> sessions;
 
     /**
      * Constructs a new PerformanceService with the specified list of orders.
      *
-     * @param orders the list of orders to calculate performance metrics for
+     * @param sessions the list of sessions with orders to calculate performance metrics for
      */
-    public PerformanceService(final List<OrderDTO> orders) {
-        this.orders = orders;
+    public PerformanceService(final List<List<OrderDTO>> sessions) {
+        this.sessions = sessions;
     }
 
     /**
@@ -40,17 +43,29 @@ public class PerformanceService {
      * @return the performance metrics of the backtesting session
      */
     public String calculatePerformance() {
-        if (orders.isEmpty()) {
-            return "No orders to calculate performance metrics.";
+        if (sessions.isEmpty()) {
+            return "No sessions to calculate performance metrics.";
         }
-        var winsAndLosses = getWinsAndLosses();
-        var wins = winsAndLosses[WIN_IDX];
-        var losses = winsAndLosses[LOSS_IDX];
+        var wins = 0.0;
+        var losses = 0.0;
+
+        var winSum = 0.0;
+        var lossSum = 0.0;
+        var mfeSum = 0.0;
+        var maeSum = 0.0;
+
+        for (List<OrderDTO> session : sessions) {
+            var winsAndLosses = getWinsAndLosses(session);
+            wins += winsAndLosses[WIN_IDX];
+            losses += winsAndLosses[LOSS_IDX];
+
+            winSum += winsAndLosses[WIN_SUM_IDX];
+            lossSum += winsAndLosses[LOSS_SUM_IDX];
+            mfeSum += winsAndLosses[MFE_SUM_IDX];
+            maeSum += winsAndLosses[MAE_SUM_IDX];
+        }
+
         var winRate = getWinRate(wins, losses);
-        var winSum = winsAndLosses[WIN_SUM_IDX];
-        var lossSum = winsAndLosses[LOSS_SUM_IDX];
-        var mfeSum = winsAndLosses[MFE_SUM_IDX];
-        var maeSum = winsAndLosses[MAE_SUM_IDX];
         var mfeAverage = mfeSum / (wins + losses);
         var maeAverage = maeSum / (wins + losses);
         var winAverage = winSum / wins;
@@ -74,9 +89,10 @@ public class PerformanceService {
     /**
      * Retrieves the number of wins and losses from the list of orders.
      *
+     * @param orders list of orders from the session
      * @return an array containing the number of wins and losses
      */
-    private double[] getWinsAndLosses() {
+    private double[] getWinsAndLosses(final List<OrderDTO> orders) {
         var wins = 0;
         var losses = 0;
         double winRSum = 0;
