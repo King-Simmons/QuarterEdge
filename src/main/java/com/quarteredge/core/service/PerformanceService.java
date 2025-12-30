@@ -71,6 +71,9 @@ public class PerformanceService {
         var winAverage = winSum / wins;
         var lossAverage = lossSum / losses;
         var expectancy = getExpectancy(wins, losses, winSum, lossSum);
+        var streaks = getWinAndLossStreaks();
+        var maxWinStreak = streaks[0];
+        var maxLossStreak = streaks[1];
 
         return String.format(
                 """
@@ -81,9 +84,20 @@ public class PerformanceService {
                 Avg Loss R: %.2f
                 Avg MFE: %.2f
                 Avg MAE: %.2f
+                Max Win Streak :  %d
+                Max Loss Streak : %d
                 Expectancy: %.2f
                 """,
-                wins, losses, winRate, winAverage, lossAverage, mfeAverage, maeAverage, expectancy);
+                wins,
+                losses,
+                winRate,
+                winAverage,
+                lossAverage,
+                mfeAverage,
+                maeAverage,
+                maxWinStreak,
+                maxLossStreak,
+                expectancy);
     }
 
     /**
@@ -95,10 +109,10 @@ public class PerformanceService {
     private double[] getWinsAndLosses(final List<OrderDTO> orders) {
         var wins = 0;
         var losses = 0;
-        double winRSum = 0;
-        double lossRSum = 0;
-        double mfeSum = 0;
-        double maeSum = 0;
+        var winRSum = 0.0;
+        var lossRSum = 0.0;
+        var mfeSum = 0.0;
+        var maeSum = 0.0;
 
         for (OrderDTO order : orders) {
             if (order.status() == OrderStatus.CLOSED_CANCELED) {
@@ -183,5 +197,57 @@ public class PerformanceService {
      */
     private double getLossRate(final double wins, final double losses) {
         return losses / (wins + losses);
+    }
+
+    /**
+     * Calculates the longest streaks of consecutive wins and losses from a collection of trading
+     * sessions.
+     *
+     * <p>The method iterates through the list of sessions and their respective orders to compute
+     * the maximum number of consecutive profitable trades (win streak) and the maximum number of
+     * consecutive losing trades (loss streak). The results of trades are determined based on the
+     * direction of the trade and price differences between the entry price and close price. Orders
+     * with the status of {@code CLOSED_CANCELED} are skipped.
+     *
+     * @return an array of two integers where: - The first element is the maximum win streak. - The
+     *     second element is the maximum loss streak.
+     */
+    private int[] getWinAndLossStreaks() {
+        var winStreak = 0;
+        var maxWinStreak = 0;
+        var lossStreak = 0;
+        var maxLossStreak = 0;
+        var prevResult = 0.0;
+
+        for (List<OrderDTO> session : sessions) {
+            for (OrderDTO order : session) {
+                if (order.status() == OrderStatus.CLOSED_CANCELED) {
+                    continue;
+                }
+                var res =
+                        order.direction() == Direction.BUY
+                                ? order.closePrice() - order.entry()
+                                : order.entry() - order.closePrice();
+
+                if (res >= 0) {
+                    if (prevResult >= 0) {
+                        winStreak++;
+                    } else {
+                        winStreak = 1;
+                    }
+                    maxWinStreak = Math.max(winStreak, maxWinStreak);
+                } else {
+                    if (prevResult < 0) {
+                        lossStreak++;
+                    } else {
+                        lossStreak = 1;
+                    }
+                    maxLossStreak = Math.max(lossStreak, maxLossStreak);
+                }
+                prevResult = res;
+            }
+        }
+
+        return new int[] {maxWinStreak, maxLossStreak};
     }
 }
