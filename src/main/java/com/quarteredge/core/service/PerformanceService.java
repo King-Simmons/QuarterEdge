@@ -74,6 +74,7 @@ public class PerformanceService {
         var streaks = getWinAndLossStreaks();
         var maxWinStreak = streaks[0];
         var maxLossStreak = streaks[1];
+        var maxDD = getMaxDrawdown();
 
         return String.format(
                 """
@@ -86,6 +87,7 @@ public class PerformanceService {
                 Avg MAE: %.2f
                 Max Win Streak :  %d
                 Max Loss Streak : %d
+                Max DrawDown : %.2f
                 Expectancy: %.2f
                 """,
                 wins,
@@ -97,6 +99,7 @@ public class PerformanceService {
                 maeAverage,
                 maxWinStreak,
                 maxLossStreak,
+                maxDD,
                 expectancy);
     }
 
@@ -249,5 +252,34 @@ public class PerformanceService {
         }
 
         return new int[] {maxWinStreak, maxLossStreak};
+    }
+
+    private double getMaxDrawdown() {
+        var maxDD = 0.0;
+        var peak = 10000.0;
+        var currEquity = 10000.0;
+
+        for (List<OrderDTO> session : sessions) {
+            for (OrderDTO order : session) {
+                if (order.status() == OrderStatus.CLOSED_CANCELED) {
+                    continue;
+                }
+                var res =
+                        order.direction() == Direction.BUY
+                                ? order.closePrice() - order.entry()
+                                : order.entry() - order.closePrice();
+                var risk =
+                        order.direction() == Direction.BUY
+                                ? order.entry() - order.SL()
+                                : order.SL() - order.entry();
+                var r = res / risk;
+
+                currEquity += r * (currEquity * 0.01);
+                peak = Math.max(peak, currEquity);
+                maxDD = Math.max((peak - currEquity), maxDD);
+            }
+        }
+
+        return maxDD;
     }
 }
