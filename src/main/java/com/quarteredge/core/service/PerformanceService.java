@@ -4,6 +4,8 @@ import static com.quarteredge.core.util.Constants.LOSS_IDX;
 import static com.quarteredge.core.util.Constants.LOSS_SUM_IDX;
 import static com.quarteredge.core.util.Constants.MAE_SUM_IDX;
 import static com.quarteredge.core.util.Constants.MFE_SUM_IDX;
+import static com.quarteredge.core.util.Constants.RISK_PER_TRADE;
+import static com.quarteredge.core.util.Constants.STARTING_BALANCE;
 import static com.quarteredge.core.util.Constants.WIN_IDX;
 import static com.quarteredge.core.util.Constants.WIN_SUM_IDX;
 
@@ -254,10 +256,21 @@ public class PerformanceService {
         return new int[] {maxWinStreak, maxLossStreak};
     }
 
+    /**
+     * Calculates the maximum drawdown (MaxDD) from a series of trading sessions. MaxDD is the
+     * largest peak-to-trough decline in equity during the trading sessions, which helps evaluate
+     * the risk of the trading strategy. The method iterates through multiple sessions and their
+     * respective orders, updating the current equity based on the order's direction, entry price,
+     * close price, and stop-loss. Closed or canceled orders are skipped. The maximum drawdown is
+     * calculated as the difference between the equity peak and the current equity at any point
+     * during the session.
+     *
+     * @return the maximum drawdown as a double value
+     */
     private double getMaxDrawdown() {
         var maxDD = 0.0;
-        var peak = 10000.0;
-        var currEquity = 10000.0;
+        var peak = STARTING_BALANCE;
+        var currEquity = STARTING_BALANCE;
 
         for (List<OrderDTO> session : sessions) {
             for (OrderDTO order : session) {
@@ -274,7 +287,7 @@ public class PerformanceService {
                                 : order.SL() - order.entry();
                 var r = res / risk;
 
-                currEquity += r * (currEquity * 0.01);
+                currEquity += r * (currEquity * RISK_PER_TRADE);
                 peak = Math.max(peak, currEquity);
                 maxDD = Math.max((peak - currEquity), maxDD);
             }

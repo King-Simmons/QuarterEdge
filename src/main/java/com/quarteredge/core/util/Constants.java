@@ -78,4 +78,10 @@ public final class Constants {
 
     /** The index positions for accessing madSum in the wins and losses array. */
     public static final int MAE_SUM_IDX = 5;
+
+    /** The starting balance for performance metrics. */
+    public static final double STARTING_BALANCE = 10000.0;
+
+    /** The Risk per Trade Percentage for performance metrics. */
+    public static final double RISK_PER_TRADE = 0.01;
 }
