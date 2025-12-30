@@ -311,7 +311,6 @@ public class PerformanceService {
      */
     private double getSharpRatio() {
         var sharpeRatio = 0.0;
-        var currEquity = STARTING_BALANCE;
         var dailyReturns = new ArrayList<Double>();
         for (List<OrderDTO> session : sessions) {
             var returns = 0.0;
@@ -330,7 +329,6 @@ public class PerformanceService {
                 var r = res / risk;
 
                 returns = (r * RISK_PER_TRADE);
-                currEquity += r * (currEquity * RISK_PER_TRADE);
             }
             dailyReturns.add(returns);
         }
